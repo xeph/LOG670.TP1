@@ -1,0 +1,123 @@
+-- TP1 - USE
+-- Auteur: Daniel Desroches
+-- Date: 3 fev 2015
+--
+-- Fichier: labo1.use
+--
+-- Description:
+--
+
+--
+
+model convois
+
+-- classes
+
+class Highway
+attributes
+  Length : Integer
+  MaxSpeed : Integer
+  MinSpeed : Integer
+end
+
+class Lane
+attributes
+end
+
+class Object
+attributes
+  Position : Integer
+end
+
+class Destination
+attributes
+  Position : Integer
+  hasGaz : Boolean
+end
+
+class Garage < Destination
+attributes
+end
+
+class Vehicle < Object
+attributes
+  Speed : Integer
+  FuelLevel : Real
+end
+
+class Brand
+attributes
+  Length : Integer
+end
+
+class Navigator
+attributes
+  CruiseSpeed : Integer
+end
+
+class GlobalWeather
+attributes
+  SafeDistanceRatio : Real
+end
+
+class CheckEngine
+attributes
+  isOk : Boolean
+end
+
+-- Associations
+
+association Lanes between
+  Highway[1] role highway
+  Lane[1..*] role lanes
+end
+
+association Objects between
+  Lane[1] role Lane
+  Object[*] role objects
+end
+
+association Destinations between
+  Lane[1] role Lane
+  Destination[*] role destinations
+end
+
+association canRepair between
+  Garage[1] role mechanic
+  Brand[1..*] role brands
+end
+
+association FollowedBy between
+  Vehicle[1] role head
+  Vehicle[1] role followed
+end
+
+association Following between
+  Vehicle[1] role following
+  Vehicle[1] role frontcar
+end
+
+association Navigator between
+  Vehicle[1] role installation
+  Navigator[1] role navigator
+end
+
+association Brand between
+  Vehicle[1] role vehicle
+  Brand[1] role brand
+end
+
+association Destination between
+  Navigator[1] role mobile
+  Destination[1] role destination
+end
+
+association CheckEngine between
+  Navigator[1] role commander
+  CheckEngine[1] role checkengine
+end
+
+association GlobalWeather between
+  Navigator[1] role commander
+  GlobalWeather[1] role weathersystem
+end
