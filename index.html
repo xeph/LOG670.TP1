@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 
   <head>
@@ -90,7 +90,25 @@
 
       <img src="images/use_diagram.png"></img>
 
-      <p>TO DO</p>
+      <h4><a id="contraintes_systeme" class="anchor"
+      href="contraintes_systeme"
+      aria-hidden=true"><span class="octicon
+      octicon-link"></span></a>Contraintes</h4>
+
+      <p>- Deux objets ne peuvent entrer en collision.</p>
+
+      <p>- Deux véhicules ne peuvent suivre le même véhicule.</p>
+
+      <p>- Vehicle1.Following.FollowedBy doit être égal à Vehicle 1.</p>
+
+      <p>- Vehicle1.FollowedBy.Following doit être égal à Vehicle 1.</p>
+      
+      <p>- Si la distance entre deux véhicule du même peloton est inférieur à
+      la distance sécuritaire, réduire la vitesse du véhicule de facon à ce
+      qu'elle soit plus petite que le véhicule qu'elle suit.</p>
+
+      <p>- La vitesse d'un véhicule ne peut être supérieure à la vitesse
+      maximale de l'autoroute.</p>
 
       <h4><a id="preuve_consistance" class="anchor" href="preuve_consistance"
       aria-hidden=true"><span class="octicon
