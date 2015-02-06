@@ -33,7 +33,7 @@ namespace LOG670.TP1
             dX = Math.Abs(dX);
             dY = Math.Abs(dY);
 
-            return rightest.Width < dX || topest.Height < dY;
+            return dX <= rightest.Width || dY <= topest.Height;
         }
 
         public string ToString()

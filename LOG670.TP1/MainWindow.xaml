@@ -4,8 +4,15 @@
         Title="MainWindow" Height="350" Width="525">
     <Grid>
         <Canvas Name="MainCanvas" Loaded="MainCanvas_Loaded" MouseDown="MainCanvas_MouseDown">
-            <Rectangle Width="50" Height="50" Fill="CornflowerBlue"></Rectangle>
-            <Rectangle Width="50" Height="50" Fill="CornflowerBlue"></Rectangle>
+            <Border BorderThickness="1" BorderBrush="Black">
+                <Rectangle Width="50" Height="50" Fill="CornflowerBlue"></Rectangle>
+            </Border>
+            <Border BorderThickness="1" BorderBrush="Black" Canvas.Left="10">
+                <Rectangle Width="50" Height="50" Fill="CornflowerBlue"></Rectangle>
+            </Border>
+            <Border BorderThickness="1" BorderBrush="Black" Canvas.Top="10">
+                <Rectangle Width="50" Height="50" Fill="CornflowerBlue"></Rectangle>
+            </Border>
         </Canvas>
     </Grid>
 </Window>

@@ -32,6 +32,8 @@ namespace LOG670.TP1
 
         private void MainCanvas_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            //MainCanvas.GetChildren().Count().Show();
+            //MainCanvas.GetChildren().Select(x => x.ToCollidable()).Count().Show();
             MainCanvas.GetChildren().Select(x => x.ToCollidable()).Collisions().Count().Show();
         }
     }

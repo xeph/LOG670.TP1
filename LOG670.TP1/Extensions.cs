@@ -33,16 +33,18 @@ namespace LOG670.TP1
 
         public static IEnumerable<Tuple<Collidable<T>, Collidable<T>>> Collisions<T>(this IEnumerable<Collidable<T>> collidables)
         {
-            var Collisions = new HashSet<Tuple<Collidable<T>, Collidable<T>>>();
-            foreach (var c1 in collidables)
+            var ls = new List<Collidable<T>>(collidables);
+            var cs = new HashSet<Tuple<Collidable<T>, Collidable<T>>>();
+
+            foreach (var c1 in ls)
             {
-                foreach (var c2 in collidables)
+                foreach (var c2 in ls)
                 {
                     if (c1 != c2 && c1.CollidesWith(c2))
                     {
-                        var t1 = new Tuple<Collidable<T>, Collidable<T>>(c1, c2);
-                        var t2 = new Tuple<Collidable<T>, Collidable<T>>(c2, c1);
-                        if(Collisions.Add(t1) && Collisions.Add(t2))
+                        var t1 = Tuple.Create(c1, c2);
+                        var t2 = Tuple.Create(c2, c1);
+                        if (cs.Add(t1) && cs.Add(t2))
                         {
                             yield return t1;
                         }
@@ -55,6 +57,12 @@ namespace LOG670.TP1
         {
             Console.Out.WriteLine(t.ToString());
             return t;
+        }
+
+        public static IEnumerable<T> ShowCount<T>(IEnumerable<T> ts)
+        {
+            ts.Count().Show();
+            return ts;
         }
     }
 }
