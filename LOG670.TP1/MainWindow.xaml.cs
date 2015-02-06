@@ -24,7 +24,15 @@ namespace LOG670.TP1
         {
             InitializeComponent();
 
-            MessageBox.Show(MainCanvas.GetChildren().Select(x => x.AsCollidable()).AsCollisions().Count().ToString());
+        }
+
+        private void MainCanvas_Loaded(object sender, RoutedEventArgs e)
+        {
+        }
+
+        private void MainCanvas_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            MainCanvas.GetChildren().Select(x => x.ToCollidable()).Collisions().Count().Show();
         }
     }
 }

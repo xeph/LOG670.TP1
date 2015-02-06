@@ -3,13 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        <Canvas Name="MainCanvas">
-            <Border BorderBrush="Black" BorderThickness="1">
-                <Rectangle Width="50" Height="50" Fill="CornflowerBlue"></Rectangle>
-            </Border>
-            <Border Canvas.Top="40" BorderBrush="Black" BorderThickness="1">
-                <Rectangle Width="50" Height="50" Fill="CornflowerBlue"></Rectangle>
-            </Border>
+        <Canvas Name="MainCanvas" Loaded="MainCanvas_Loaded" MouseDown="MainCanvas_MouseDown">
+            <Rectangle Width="50" Height="50" Fill="CornflowerBlue"></Rectangle>
+            <Rectangle Width="50" Height="50" Fill="CornflowerBlue"></Rectangle>
         </Canvas>
     </Grid>
 </Window>
