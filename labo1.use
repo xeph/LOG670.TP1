@@ -11,6 +11,9 @@
 
 model convois
 
+-- Enumerations
+enum WeatherType {cloudy, raining, snowing, sunny}
+
 -- classes
 
 class Highway
@@ -43,6 +46,27 @@ class Vehicle < Object
 attributes
   Speed : Integer
   FuelLevel : Real
+  Following : Vehicle
+  FollowedBy : Vehicle
+  Navi : Navigator
+operations
+  startConvoy(vehicle:Vehicle)
+  begin
+    self.Following := vehicle;
+    vehicle.FollowedBy := self;
+    vehicle.Navi.isAlive := true;
+  end
+  pre VehicleStartingNotFollowing: self.Following.isUndefined
+  pre VehicleStartingNotFollowed: self.FollowedBy.isUndefined
+  pre VehicleStartingNoNavigator: self.Navi.isAlive=false
+  pre VehicleEntryNotFollowing: vehicle.Following.isUndefined
+  pre VehicleEntryNoNavigator: vehicle.Navi.isAlive=false
+  post VehicleStartedNotFollowing: self.Following.isUndefined
+  post VehicleStartedFollowed: self.FollowedBy = vehicle
+  post VehicleStartedNoNavigator: self.Navi.isAlive=false
+  post VehicleEnteredFollowing: vehicle.Following = self
+  post VehicleEnteredNavigatorOn: vehicle.Navi.isAlive=true
+  
 end
 
 class Brand
@@ -53,17 +77,35 @@ end
 class Navigator
 attributes
   CruiseSpeed : Integer
+  isAlive : Boolean
 end
-
+ 
 class GlobalWeather
 attributes
   SafeDistanceRatio : Real
+operations
+  calculateSafeDistance (weaterType:WeatherType) : Real =
+    if weaterType=#cloudy or weaterType=#sunny then
+      1.0
+    else
+      if weaterType=#raining then
+        0.9
+      else
+        0.75
+      endif
+    endif
 end
 
 class CheckEngine
 attributes
   isOk : Boolean
 end
+
+-- Contraints
+
+constraints Object 
+  inv NoObjectsCollide:
+  not Object.allInstance()->exists(o : Object | o.position = self.position)
 
 -- Associations
 
