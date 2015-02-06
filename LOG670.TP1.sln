@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LOG670.TP1", "LOG670.TP1\LOG670.TP1.csproj", "{C6AD6F08-49D8-4D5C-B78E-9F05A664A690}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Platoon", "Platoon", "{04EBF01F-13F4-4703-9B96-90DCB16CAE81}"
+	ProjectSection(SolutionItems) = preProject
+		LOG670.TP1\src\Brand.cs = LOG670.TP1\src\Brand.cs
+		LOG670.TP1\src\CheckEngine.cs = LOG670.TP1\src\CheckEngine.cs
+		LOG670.TP1\src\Destination.cs = LOG670.TP1\src\Destination.cs
+		LOG670.TP1\src\Garage.cs = LOG670.TP1\src\Garage.cs
+		LOG670.TP1\src\GlobalWeather.cs = LOG670.TP1\src\GlobalWeather.cs
+		LOG670.TP1\src\Highway.cs = LOG670.TP1\src\Highway.cs
+		LOG670.TP1\src\Lane.cs = LOG670.TP1\src\Lane.cs
+		LOG670.TP1\src\main.cs = LOG670.TP1\src\main.cs
+		LOG670.TP1\src\Navigator.cs = LOG670.TP1\src\Navigator.cs
+		LOG670.TP1\src\Object.cs = LOG670.TP1\src\Object.cs
+		LOG670.TP1\src\Vehicle.cs = LOG670.TP1\src\Vehicle.cs
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C6AD6F08-49D8-4D5C-B78E-9F05A664A690}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6AD6F08-49D8-4D5C-B78E-9F05A664A690}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6AD6F08-49D8-4D5C-B78E-9F05A664A690}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6AD6F08-49D8-4D5C-B78E-9F05A664A690}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
