@@ -61,6 +61,16 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Classes\Brand.cs" />
+    <Compile Include="Classes\CheckEngine.cs" />
+    <Compile Include="Classes\Destination.cs" />
+    <Compile Include="Classes\Garage.cs" />
+    <Compile Include="Classes\GlobalWeather.cs" />
+    <Compile Include="Classes\Highway.cs" />
+    <Compile Include="Classes\Lane.cs" />
+    <Compile Include="Classes\Navigator.cs" />
+    <Compile Include="Classes\Object.cs" />
+    <Compile Include="Classes\Vehicle.cs" />
     <Compile Include="Collidable.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="MainWindow.xaml.cs">
