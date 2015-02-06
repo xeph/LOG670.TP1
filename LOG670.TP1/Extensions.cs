@@ -53,7 +53,7 @@ namespace LOG670.TP1
 
         public static T Show<T>(this T t)
         {
-            Console.Out.WriteLine(o.ToString());
+            Console.Out.WriteLine(t.ToString());
             return t;
         }
     }
