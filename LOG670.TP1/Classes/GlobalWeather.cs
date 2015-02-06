@@ -1,5 +1,5 @@
 public class GlobalWeather {
 
-    public Float SafeDistanceRatio { get; private set; }
+    public float SafeDistanceRatio { get; private set; }
    
 }
