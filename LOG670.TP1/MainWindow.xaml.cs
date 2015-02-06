@@ -23,6 +23,8 @@ namespace LOG670.TP1
         public MainWindow()
         {
             InitializeComponent();
+
+            MessageBox.Show(MainCanvas.GetChildren().Select(x => x.AsCollidable()).AsCollisions().Count().ToString());
         }
     }
 }

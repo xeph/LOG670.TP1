@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LOG670.TP1", "LOG670.TP1\LOG670.TP1.csproj", "{C6AD6F08-49D8-4D5C-B78E-9F05A664A690}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Platoon", "Platoon", "{04EBF01F-13F4-4703-9B96-90DCB16CAE81}"
@@ -12,7 +14,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Platoon", "Platoon", "{04EB
 		LOG670.TP1\src\GlobalWeather.cs = LOG670.TP1\src\GlobalWeather.cs
 		LOG670.TP1\src\Highway.cs = LOG670.TP1\src\Highway.cs
 		LOG670.TP1\src\Lane.cs = LOG670.TP1\src\Lane.cs
-		LOG670.TP1\src\main.cs = LOG670.TP1\src\main.cs
 		LOG670.TP1\src\Navigator.cs = LOG670.TP1\src\Navigator.cs
 		LOG670.TP1\src\Object.cs = LOG670.TP1\src\Object.cs
 		LOG670.TP1\src\Vehicle.cs = LOG670.TP1\src\Vehicle.cs
