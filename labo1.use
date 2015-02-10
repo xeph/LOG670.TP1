@@ -11,11 +11,19 @@
 
 model convois
 
+-- ============
 -- Enumerations
+-- ============
+
+-- definis les types de temps possible
 enum WeatherType {cloudy, raining, snowing, sunny}
 
+-- =======
 -- classes
+-- =======
 
+-- ensemble de voies exclusivement reservee a la
+-- circulation des vehicules
 class Highway
 attributes
   Length : Integer
@@ -23,25 +31,35 @@ attributes
   MinSpeed : Integer
 end
 
+-- voie exclusivement reservee a la circulation
+-- des vehicules
 class Lane
 attributes
 end
 
+-- obstacle se trouvant sur une voie pour obstruer
+-- la voie des vehicules
 class Object
 attributes
   Position : Integer
 end
 
+-- lieu ou se dirige un vehicule
 class Destination
 attributes
   Position : Integer
   hasGaz : Boolean
 end
 
+-- s'occupe de la reparation et entretien d'un vehicule
 class Garage < Destination
 attributes
 end
 
+-- moyen de transport motorise
+
+-- startConvoy
+-- permet de demarrer un convoi de voiture
 class Vehicle < Object
 attributes
   Speed : Integer
@@ -69,17 +87,24 @@ operations
   
 end
 
+-- une facon unique d'identifier un vehicule a cause
+-- de son style personnel
 class Brand
 attributes
   Length : Integer
 end
 
+-- permet a l'utilisateur de ce faire guider automatiquement
+-- vers sa destination
 class Navigator
 attributes
   CruiseSpeed : Integer
   isAlive : Boolean
 end
  
+-- etat du temps exterieur qui permet de definir
+-- la distance de securite que les vehicules
+-- doivent prendre
 class GlobalWeather
 attributes
   SafeDistanceRatio : Real
@@ -96,18 +121,25 @@ operations
     endif
 end
 
+-- detecteur qui dit au conducteur du vehicule
+-- si son moteur a un probleme et il doit arreter
+-- dans un garage
 class CheckEngine
 attributes
   isOk : Boolean
 end
 
+-- ==========
 -- Contraints
+-- ==========
 
 constraints Object 
   inv NoObjectsCollide:
   not Object.allInstance()->exists(o : Object | o.position = self.position)
 
+-- ============
 -- Associations
+-- ============
 
 association Lanes between
   Highway[1] role highway
