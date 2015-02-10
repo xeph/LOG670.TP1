@@ -76,15 +76,27 @@ operations
   end
   pre VehicleStartingNotFollowing: self.Following.isUndefined
   pre VehicleStartingNotFollowed: self.FollowedBy.isUndefined
-  pre VehicleStartingNoNavigator: self.Navi.isAlive=false
+  pre VehicleStartingNoNavigator: self.Navi.isAlive = false
   pre VehicleEntryNotFollowing: vehicle.Following.isUndefined
-  pre VehicleEntryNoNavigator: vehicle.Navi.isAlive=false
+  pre VehicleEntryNoNavigator: vehicle.Navi.isAlive = false
   post VehicleStartedNotFollowing: self.Following.isUndefined
   post VehicleStartedFollowed: self.FollowedBy = vehicle
-  post VehicleStartedNoNavigator: self.Navi.isAlive=false
+  post VehicleStartedNoNavigator: self.Navi.isAlive = false
   post VehicleEnteredFollowing: vehicle.Following = self
   post VehicleEnteredNavigatorOn: vehicle.Navi.isAlive=true
   
+  LeaveConvoy()
+  begin
+    self.Following.FollowedBy := null;
+    self.Following := null;
+    self.Navi.isAlive := false;
+  end
+  pre VehicleIsFollowing: self.Following.isUndefined = false
+  pre VehicleHeadFollowed: self.Following.FollowedBy = self
+  pre VehicleStartedNoNavigator: self.Navi.isAlive = true
+  post VehicleHeadNotLongerFollowed: not Vehicle.allInstances->exists(v | v.Following = self)
+  post VehicleLeavingNoNavigator: self.Navi.isAlive = false
+  post VehicleLeavingNotFollowing: self.FollowedBy.isUndefined
 end
 
 -- une facon unique d'identifier un vehicule a cause
@@ -133,10 +145,41 @@ end
 -- Contraints
 -- ==========
 
-constraints Object 
-  inv NoObjectsCollide:
-  not Object.allInstance()->exists(o : Object | o.position = self.position)
+constraints
 
+-- en aucun temps, un objet dans une ligne peut avoir la même position 
+-- qu'un autre objet.
+context Lane inv NoObjectsCollide:
+  self.objects->asSet()->size() = self.objects->asBag()->size()
+
+-- Un véhicule ne peut aller plus rapidement que la limite de vitesse
+-- de l'autoroute le permet.
+context Vehicle inv RespectMaxSpeed:
+  self.Speed <= self.lane.highway.MaxSpeed
+
+-- Un véhicule qui a un autre véhicule qui le suit, se doit d'avoir
+-- lui-même en tant que véhicule de tête pour le véhicule qui le suit.
+context Vehicle inv FollowedByTheFollowing:
+  self.FollowedBy.isUndefined=false implies self.FollowedBy.Following = self
+
+-- En aucun temps, deux véhicules ne peuvent être suivi par le même véhicule.
+context Vehicle inv NotFollowedByTheSameVehicle:
+  Vehicle.allInstances->collect(v | v.FollowedBy)->size() = Vehicle.allInstances->collect(v | v.FollowedBy)->asSet()->size() 
+  
+  
+-- En aucun temps, deux véhicules ne peuvent suivre le même véhicule.
+context Vehicle inv NotFollowingTheSameVehicle:
+  Vehicle.allInstances->collect(v | v.Following)->size() = Vehicle.allInstances->collect(v | v.Following)->asSet()->size() 
+  
+-- Un véhicule qui suit un autre véhicule, se doit d'avoir
+-- lui-même en tant que véhicule suivant le véhicule de tête.
+context Vehicle inv FollowingTheFollowedBy:
+  self.Following.isUndefined=false implies self.Following.FollowedBy = self
+  
+-- Un véhicule suivant un autre doit avoir son navigateur actif.
+context Vehicle inv NaviOnWhileFollowing:
+  self.Following.isUndefined=false implies self.Navi.isAlive=true
+  
 -- ============
 -- Associations
 -- ============
@@ -147,12 +190,12 @@ association Lanes between
 end
 
 association Objects between
-  Lane[1] role Lane
+  Lane[1] role lane
   Object[*] role objects
 end
 
 association Destinations between
-  Lane[1] role Lane
+  Lane[1] role lane
   Destination[*] role destinations
 end
 
@@ -162,13 +205,13 @@ association canRepair between
 end
 
 association FollowedBy between
-  Vehicle[1] role head
-  Vehicle[1] role followed
+  Vehicle[0..1] role head
+  Vehicle[0..1] role followed
 end
 
 association Following between
-  Vehicle[1] role following
-  Vehicle[1] role frontcar
+  Vehicle[0..1] role following
+  Vehicle[0..1] role frontcar
 end
 
 association Navigator between
