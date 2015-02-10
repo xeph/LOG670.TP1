@@ -123,12 +123,12 @@ attributes
 operations
   calculateSafeDistance (weaterType:WeatherType) : Real =
     if weaterType=#cloudy or weaterType=#sunny then
-      1.0
+      result := 1.0
     else
       if weaterType=#raining then
-        0.9
+        result := 0.9
       else
-        0.75
+        result := 0.75
       endif
     endif
 end
