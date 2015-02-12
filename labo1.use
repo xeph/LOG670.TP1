@@ -29,6 +29,16 @@ attributes
   Length : Integer
   MaxSpeed : Integer
   MinSpeed : Integer
+operations
+  everyVehiclesRespectSpeedLimit() : Boolean
+  post ReturnValue : self.lanes->forAll(l | 
+    l.objects->forAll(o | 
+      if o.oclIsTypeOf(Vehicle) then
+        result = o.oclAsType(Vehicle).Speed <= MaxSpeed and o.oclAsType(Vehicle).Speed >= MinSpeed 
+      else
+        result = true
+      endif)
+      )
 end
 
 -- voie exclusivement reservee a la circulation
@@ -54,6 +64,17 @@ end
 -- s'occupe de la reparation et entretien d'un vehicule
 class Garage < Destination
 attributes
+operations
+  canRepair(vehicle : Vehicle) : Boolean
+  post ReturnValue : result = self.brands->exists(b | b.Name = vehicle.brand.Name)
+  
+  repairCar(vehicle : Vehicle)
+  begin
+    vehicle.Navi.checkengine.isOk := true
+  end
+  pre vehicleAtPosition: vehicle.Position = self.Position
+  pre vehicleNeedsRepair: vehicle.Navi.checkengine.isOk = false
+  post repaired: vehicle.Navi.checkengine.isOk = true
 end
 
 -- moyen de transport motorise
@@ -85,7 +106,7 @@ operations
   post VehicleEnteredFollowing: vehicle.Following = self
   post VehicleEnteredNavigatorOn: vehicle.Navi.isAlive=true
   
-  LeaveConvoy()
+  leaveConvoy()
   begin
     self.Following.FollowedBy := null;
     self.Following := null;
@@ -97,6 +118,28 @@ operations
   post VehicleHeadNotLongerFollowed: not Vehicle.allInstances->exists(v | v.Following = self)
   post VehicleLeavingNoNavigator: self.Navi.isAlive = false
   post VehicleLeavingNotFollowing: self.FollowedBy.isUndefined
+  
+  respectSpeedLimit (speed : Integer) : Boolean
+  post ReturnValue : if self.Speed = speed then
+    result = true
+  else
+    result = false
+  endif
+  
+  vehicleNeedRepair() : Boolean
+  post ReturnValue : result = (self.Navi.checkengine.isOk = false)
+  
+  changeLane(lane : Lane)
+  pre LaneNotCurrentLane: not (self.lane = lane)
+  post LaneNowCurrentLane: self.lane = lane
+  post LaneNotOldLane: not (self.lane = self.lane@pre)
+  
+  setDestination(dest : Destination)
+  pre DestinationNotCurrentDestination: not (self.Navi.destination = dest)
+  pre NavigatorOn: self.Navi.isAlive = true
+  post DestinationNowCurrentDestination: self.Navi.destination = dest
+  post DestinationNowOldDestination: not (self.Navi.destination = self.Navi.destination@pre)
+  post NavigatorStillOn: self.Navi.isAlive = true
 end
 
 -- une facon unique d'identifier un vehicule a cause
@@ -104,6 +147,7 @@ end
 class Brand
 attributes
   Length : Integer
+  Name : String
 end
 
 -- permet a l'utilisateur de ce faire guider automatiquement
@@ -121,14 +165,14 @@ class GlobalWeather
 attributes
   SafeDistanceRatio : Real
 operations
-  calculateSafeDistance (weaterType:WeatherType) : Real =
-    if weaterType=#cloudy or weaterType=#sunny then
-      result := 1.0
+  calculateSafeDistance (weaterType:WeatherType) : Real
+    post ReturnValue : if weaterType=#cloudy or weaterType=#sunny then
+      result = 1.0
     else
       if weaterType=#raining then
-        result := 0.9
+        result = 0.9
       else
-        result := 0.75
+        result = 0.75
       endif
     endif
 end
