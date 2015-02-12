@@ -1,0 +1,151 @@
+-- Script pour tester les invariants,
+-- operations et requetes
+
+-- ================
+-- Test de creation
+-- ================
+
+!create gw : GlobalWeather
+!set gw.SafeDistanceRatio := 0.95
+
+!create ch : CheckEngine
+!set ch.isOk := true
+
+!create br1 : Brand
+!set br1.Length := 3
+!set br1.Name := 'Toyota'
+
+!create br2 : Brand
+!set br2.Length := 2
+!set br2.Name := 'Honda'
+
+!create ga : Garage
+!set ga.canRepair := Set{br1, br2}
+
+!create de1 : Destination
+!set de1.Position := 7
+!set de1.HasGaz := true
+
+!create de2 : Destination
+!set de2.Position := 6
+!set de2.HasGaz := true
+
+!create na : Navigator
+!set na.isAlive := true
+!set na.Destination := Set{de1, de2}
+!set na.CruiseSpeed := 70
+!set na.CheckEngine := ch
+
+!create ve : Vehicle
+!set ve.Speed := 70
+--!set ve.FollowedBy := 
+--!set ve.Following := 
+!set ve.FuelLevel := 100
+!set ve.Navigator := na
+!set ve.Brand := br1
+
+!create ob1 : Object
+!set ob1.Position := 5
+
+!create ob2 : Object
+!set ob2.Position := 4
+
+!create la1 : Lane
+!set la1.Objects := Set{ob1, ob2}
+!set la1.Destinations := Set{de1, de2}
+
+!create la2 : Lane
+!set la2.Objects := Set{ob1, ob2}
+!set la2.Destinations := Set{de1, de2}
+
+!create hw : Highway
+!set hw.Length := 100
+!set hw.MaxSpeed := 100
+!set hw.MinSpeed := 70
+
+-- ==========
+-- Invariants
+-- ==========
+
+-- ----------------
+-- NoObjectsCollide
+-- ----------------
+
+-- ---------------
+-- RespectMaxSpeed
+-- ---------------
+
+-- ----------------------
+-- FollowedByTheFollowing
+-- ----------------------
+
+-- ---------------------------
+-- NotFollowedByTheSameVehicle
+-- ---------------------------
+
+-- --------------------------
+-- NotFollowingTheSameVehicle
+-- --------------------------
+
+-- ----------------------
+-- FollowingTheFollowedBy
+-- ----------------------
+
+-- --------------------
+-- NaviOnWhileFollowing
+-- --------------------
+
+-- ==========
+-- Operations
+-- ==========
+
+-- ----------------------------
+-- startConvoy(vehicle:Vehicle)
+-- ----------------------------
+
+!create na1 : Navigator
+!set na1.isAlive := false
+
+!create na2 : Navigator
+!set na2.isAlive := false
+
+!create ve1 : Vehicle
+!set ve1.Navigator := na1
+
+!create ve2 : Vehicle
+!set ve2.Navigator := na2
+
+!ve1.startConvoy(ve2)
+
+-- -------------
+-- LeaveConvoy()
+-- -------------
+
+!create na1 : Navigator
+!set na1.isAlive := false
+
+!create na2 : Navigator
+!set na2.isAlive := false
+
+!create ve1 : Vehicle
+!set ve1.Navigator := na1
+
+!create ve2 : Vehicle
+!set ve2.Navigator := na2
+
+!ve1.startConvoy(ve2)
+!ve2.leaveConvoy(ve1)
+
+-- ========
+-- Requetes
+-- ========
+
+-- ----------------------------------------------
+-- calculateSafeDistance (weaterType:WeatherType)
+-- ----------------------------------------------
+
+!create gw : GlobalWeather
+!set SafeDistanceRatio := gw.calculateSafeDistance(#cloudy)
+!set SafeDistanceRatio := gw.calculateSafeDistance(#sunny)
+!set SafeDistanceRatio := gw.calculateSafeDistance(#raining)
+!set SafeDistanceRatio := gw.calculateSafeDistance(#snowing)
