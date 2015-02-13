@@ -69,12 +69,12 @@ operations
   
   repairVehicle(vehicle : Vehicle)
   begin
-    vehicle.Navi.checkengine.isOk := true
+    vehicle.navigator.checkengine.isOk := true
   end
   pre vehicleAtPosition: vehicle.Position = self.Position
-  pre vehicleNeedsRepair: vehicle.Navi.checkengine.isOk = false
+  pre vehicleNeedsRepair: vehicle.navigator.checkengine.isOk = false
   pre GarageCanRepair: self.brands->exists(b | b.Name = vehicle.brand.Name)
-  post repaired: vehicle.Navi.checkengine.isOk = true
+  post repaired: vehicle.navigator.checkengine.isOk = true
 end
 
 -- moyen de transport motorise
@@ -85,57 +85,39 @@ class Vehicle < Object
 attributes
   Speed : Integer
   FuelLevel : Real
-  Following : Vehicle
-  FollowedBy : Vehicle
-  Navi : Navigator
 operations
   startConvoy(vehicle:Vehicle)
-  begin
-    self.FollowedBy := vehicle;
-    vehicle.Following := self;
-    vehicle.Navi.isAlive := true;
-  end
-  pre VehicleStartingNotFollowing: self.Following.isUndefined
-  pre VehicleStartingNotFollowed: self.FollowedBy.isUndefined
-  pre VehicleStartingNoNavigator: self.Navi.isAlive = false
-  pre VehicleEntryNotFollowing: vehicle.Following.isUndefined
-  pre VehicleEntryNoNavigator: vehicle.Navi.isAlive = false
-  post VehicleStartedNotFollowing: self.Following.isUndefined
-  post VehicleStartedFollowed: self.FollowedBy = vehicle
-  post VehicleStartedNoNavigator: self.Navi.isAlive = false
-  post VehicleEnteredFollowing: vehicle.Following = self
-  post VehicleEnteredNavigatorOn: vehicle.Navi.isAlive=true
+  pre VehicleStartingNotFollowing: self.following.isUndefined
+  pre VehicleStartingNotFollowed: self.frontcar.isUndefined
+  pre VehicleStartingNoNavigator: self.navigator.isAlive = false
+  pre VehicleEntryNotFollowing: vehicle.following.isUndefined
+  pre VehicleEntryNoNavigator: vehicle.navigator.isAlive = false
+  post VehicleStartedNotFollowing: self.following.isUndefined
+  post VehicleStartedFollowed: self.frontcar = vehicle
+  post VehicleStartedNoNavigator: self.navigator.isAlive = false
+  post VehicleEnteredFollowing: vehicle.following = self
+  post VehicleEnteredNavigatorOn: vehicle.navigator.isAlive=true
   
   joinConvoy(vehicle:Vehicle)
-  begin
-    self.Following := vehicle;
-    vehicle.FollowedBy := self;
-    self.Navi.isAlive := true;
-  end
-  pre FrontCarFollowingSomeone: not (vehicle.Following.isUndefined)
-  pre FrontCarFollowedByNobody: vehicle.FollowedBy.isUndefined
-  pre FrontCarNaviOn: vehicle.Navi.isAlive=true
-  pre VehicleEntryFollowingNoOne: self.Following.isUndefined
-  pre VehicleEntryNoNavigator: vehicle.Navi.isAlive = false
-  pre FrontCarStillFollowingSomeone: not (vehicle.Following.isUndefined)
-  pre FrontCarNowFollowedBySelf: vehicle.FollowedBy = self
-  pre FrontCarNaviStillOn: vehicle.Navi.isAlive=true
-  pre VehicleEntryNowFollowingSomeone: self.Following = vehicle
-  pre VehicleEntryNowNavigatorOn: vehicle.Navi.isAlive = true
+  pre FrontCarFollowingSomeone: not (vehicle.following.isUndefined)
+  pre FrontCarFollowedByNobody: vehicle.frontcar.isUndefined
+  pre FrontCarNaviOn: vehicle.navigator.isAlive=true
+  pre VehicleEntryFollowingNoOne: self.following.isUndefined
+  pre VehicleEntryNoNavigator: vehicle.navigator.isAlive = false
+  pre FrontCarStillFollowingSomeone: not (vehicle.following.isUndefined)
+  pre FrontCarNowFollowedBySelf: vehicle.frontcar = self
+  pre FrontCarNaviStillOn: vehicle.navigator.isAlive=true
+  pre VehicleEntryNowFollowingSomeone: self.following = vehicle
+  pre VehicleEntryNowNavigatorOn: vehicle.navigator.isAlive = true
     
   
   leaveConvoy()
-  begin
-    self.Following.FollowedBy := null;
-    self.Following := null;
-    self.Navi.isAlive := false;
-  end
-  pre VehicleIsFollowing: self.Following.isUndefined = false
-  pre VehicleHeadFollowed: self.Following.FollowedBy = self
-  pre VehicleStartedNoNavigator: self.Navi.isAlive = true
-  post VehicleHeadNotLongerFollowed: not Vehicle.allInstances->exists(v | v.Following = self)
-  post VehicleLeavingNoNavigator: self.Navi.isAlive = false
-  post VehicleLeavingNotFollowing: self.FollowedBy.isUndefined
+  pre VehicleIsFollowing: self.following.isUndefined = false
+  pre VehicleHeadFollowed: self.following.frontcar = self
+  pre VehicleStartedNoNavigator: self.navigator.isAlive = true
+  post VehicleHeadNotLongerFollowed: not Vehicle.allInstances->exists(v | v.following = self)
+  post VehicleLeavingNoNavigator: self.navigator.isAlive = false
+  post VehicleLeavingNotFollowing: self.frontcar.isUndefined
   
   respectSpeedLimit(speed : Integer) : Boolean = if self.Speed = speed then true else false endif
   
@@ -147,11 +129,11 @@ operations
   post LaneNotOldLane: not (self.lane = self.lane@pre)
   
   setDestination(dest : Destination)
-  pre DestinationNotCurrentDestination: not (self.Navi.destination = dest)
-  pre NavigatorOn: self.Navi.isAlive = true
-  post DestinationNowCurrentDestination: self.Navi.destination = dest
-  post DestinationNowOldDestination: not (self.Navi.destination = self.Navi.destination@pre)
-  post NavigatorStillOn: self.Navi.isAlive = true
+  pre DestinationNotCurrentDestination: not (self.navigator.destination = dest)
+  pre NavigatorOn: self.navigator.isAlive = true
+  post DestinationNowCurrentDestination: self.navigator.destination = dest
+  post DestinationNowOldDestination: not (self.navigator.destination = self.navigator.destination@pre)
+  post NavigatorStillOn: self.navigator.isAlive = true
 end
 
 -- une facon unique d'identifier un vehicule a cause
