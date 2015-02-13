@@ -1,0 +1,206 @@
+-- Script pour tester les invariants,
+-- operations et requetes
+
+-- ================
+-- Test de creation
+-- ================
+
+!create gw : GlobalWeather
+!set gw.SafeDistanceRatio := 0.95
+
+!create ch1 : CheckEngine
+!set ch1.isOk := true
+
+!create ch2 : CheckEngine
+!set ch2.isOk := true
+
+!create br1 : Brand
+!set br1.Length := 3
+!set br1.Name := 'Toyota'
+
+!create br2 : Brand
+!set br2.Length := 2
+!set br2.Name := 'Honda'
+
+!create ga : Garage
+!set ga.canRepair := Set{br1, br2}
+
+!create de1 : Destination
+!set de1.Position := 7
+!set de1.HasGaz := true
+
+!create de2 : Destination
+!set de2.Position := 6
+!set de2.HasGaz := true
+
+!create na1 : Navigator
+!set na1.isAlive := true
+!set na1.Destination := Set{de1, de2}
+!set na1.CruiseSpeed := 70
+!set na1.CheckEngine := ch1
+
+!create na2 : Navigator
+!set na2.isAlive := true
+!set na2.Destination := Set{de1, de2}
+!set na2.CruiseSpeed := 70
+!set na2.CheckEngine := ch2
+
+!create ve : Vehicle
+!set ve.Speed := 70
+!set ve.FollowedBy := ve2
+--!set ve.Following := 
+!set ve.FuelLevel := 100
+!set ve.Navigator := na1
+!set ve.Brand := br1
+
+!create ve2 : Vehicle
+!set ve2.Speed := 70
+--!set ve2.FollowedBy := 
+!set ve2.Following := ve
+!set ve2.FuelLevel := 100
+!set ve2.Navigator := na2
+!set ve2.Brand := br2
+
+
+!create ob1 : Object
+!set ob1.Position := 5
+
+!create ob2 : Object
+!set ob2.Position := 4
+
+!create la1 : Lane
+!set la1.Objects := Set{ob1, ob2}
+!set la1.Destinations := Set{de1, de2}
+
+!create la2 : Lane
+!set la2.Objects := Set{ob1, ob2}
+!set la2.Destinations := Set{de1, de2}
+
+!create hw : Highway
+!set hw.Length := 100
+!set hw.MaxSpeed := 100
+!set hw.MinSpeed := 70
+
+!insert (hw, Set{la1, la2}) into LanesLink
+!insert (la1, Set{ob1, ob2}) into ObjectsLink
+!insert (la1, Set{de1, de2}) into DestinationsLink
+!insert (ga, Set{br1, br2}) into canRepair
+!insert (ve, ve2) into FollowedByLink
+!insert (ve2, ve) into FollowingLink
+!insert (ve, na1) into NavigatorLink
+!insert (ve2, na2) into NavigatorLink
+!insert (ve, br1) into BrandLink
+!insert (ve2, br2) into BrandLink
+!insert (na1, de1) into DestinationLink
+!insert (na1, de2) into DestinationLink
+!insert (na2, de1) into DestinationLink
+!insert (na2, de2) into DestinationLink
+!insert (na1, ch1) into CheckEngineLink
+!insert (na2, ch2) into CheckEngineLink
+!insert (na1, gw) into GlobalWeatherLink
+!insert (na2, gw) into GlobalWeatherLink
+
+-- ==========
+-- Invariants
+-- ==========
+
+-- ----------------
+-- NoObjectsCollide
+-- ----------------
+
+-- ---------------
+-- RespectMaxSpeed
+-- ---------------
+
+-- ----------------------
+-- FollowedByTheFollowing
+-- ----------------------
+
+-- ---------------------------
+-- NotFollowedByTheSameVehicle
+-- ---------------------------
+
+-- --------------------------
+-- NotFollowingTheSameVehicle
+-- --------------------------
+
+-- ----------------------
+-- FollowingTheFollowedBy
+-- ----------------------
+
+-- --------------------
+-- NaviOnWhileFollowing
+-- --------------------
+
+-- ==========
+-- Operations
+-- ==========
+
+-- ----------------------------
+-- startConvoy(vehicle:Vehicle)
+-- ----------------------------
+
+!ve1.startConvoy(ve2)
+
+-- -------------
+-- LeaveConvoy()
+-- -------------
+
+!ve2.leaveConvoy(ve1)
+
+-- ----------------------------
+-- repairCar(vehicle : Vehicle)
+-- ----------------------------
+
+!set ch1.CheckEngine := false
+!ga.repairCar(ve1)
+
+-- -----------------------
+-- changeLane(lane : Lane)
+-- -----------------------
+
+!ve1.changeLane(la2)
+
+-- ----------------------------------
+-- setDestination(dest : Destination)
+-- ----------------------------------
+
+!ve1.setDestination(de2)
+
+-- ========
+-- Requetes
+-- ========
+
+-- --------------------------------
+-- everyVehiclesRespectSpeedLimit()
+-- --------------------------------
+
+?hw.everyVehiclesRespectSpeedLimit()
+
+-- ----------------------------
+-- checkBrandList(vehicle : Vehicle)
+-- ----------------------------
+
+?ga.checkBrandList(ve)
+
+-- ----------------------------------
+-- respectSpeedLimit(speed : Integer)
+-- ----------------------------------
+
+?ve1.respectSpeedLimit(70)
+
+-- -------------------
+-- vehicleNeedRepair()
+-- -------------------
+
+?ve1.vehicleNeedRepair()
+
+-- ----------------------------------------------
+-- calculateSafeDistance (weaterType:WeatherType)
+-- ----------------------------------------------
+
+!create gw : GlobalWeather
+!set SafeDistanceRatio := gw.calculateSafeDistance(#cloudy)
+!set SafeDistanceRatio := gw.calculateSafeDistance(#sunny)
+!set SafeDistanceRatio := gw.calculateSafeDistance(#raining)
+!set SafeDistanceRatio := gw.calculateSafeDistance(#snowing)

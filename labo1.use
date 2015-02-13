@@ -29,6 +29,16 @@ attributes
   Length : Integer
   MaxSpeed : Integer
   MinSpeed : Integer
+operations
+  everyVehiclesRespectSpeedLimit() : Boolean =
+	self.lanes->forAll(l | 
+    l.objects->forAll(o | 
+      if o.oclIsTypeOf(Vehicle) then
+        o.oclAsType(Vehicle).Speed <= MaxSpeed and o.oclAsType(Vehicle).Speed >= MinSpeed 
+      else
+        true
+      endif)
+      )
 end
 
 -- voie exclusivement reservee a la circulation
@@ -54,6 +64,10 @@ end
 -- s'occupe de la reparation et entretien d'un vehicule
 class Garage < Destination
 attributes
+operations
+  checkRepairBrand(vehicle : Vehicle) : Boolean = self.brands->exists(b | b.Name = vehicle.brand.Name)
+  
+  repairVehicle(vehicle : Vehicle)
 end
 
 -- moyen de transport motorise
@@ -64,27 +78,55 @@ class Vehicle < Object
 attributes
   Speed : Integer
   FuelLevel : Real
-  Following : Vehicle
-  FollowedBy : Vehicle
-  Navi : Navigator
 operations
   startConvoy(vehicle:Vehicle)
-  begin
-    self.Following := vehicle;
-    vehicle.FollowedBy := self;
-    vehicle.Navi.isAlive := true;
-  end
-  pre VehicleStartingNotFollowing: self.Following.isUndefined
-  pre VehicleStartingNotFollowed: self.FollowedBy.isUndefined
-  pre VehicleStartingNoNavigator: self.Navi.isAlive=false
-  pre VehicleEntryNotFollowing: vehicle.Following.isUndefined
-  pre VehicleEntryNoNavigator: vehicle.Navi.isAlive=false
-  post VehicleStartedNotFollowing: self.Following.isUndefined
-  post VehicleStartedFollowed: self.FollowedBy = vehicle
-  post VehicleStartedNoNavigator: self.Navi.isAlive=false
-  post VehicleEnteredFollowing: vehicle.Following = self
-  post VehicleEnteredNavigatorOn: vehicle.Navi.isAlive=true
+  pre VehicleStartingNotFollowing: self.following.isUndefined
+  pre VehicleStartingNotFollowed: self.frontcar.isUndefined
+  pre VehicleStartingNoNavigator: self.navigator.isAlive = false
+  pre VehicleEntryNotFollowing: vehicle.following.isUndefined
+  pre VehicleEntryNoNavigator: vehicle.navigator.isAlive = false
+  post VehicleStartedNotFollowing: self.frontcar.isUndefined
+  post VehicleStartedFollowed: self.following = vehicle
+  post VehicleStartedNoNavigator: self.navigator.isAlive = false
+  post VehicleEnteredFollowing: vehicle.frontcar = self
+  post VehicleEnteredNavigatorOn: vehicle.navigator.isAlive=true
   
+  joinConvoy(vehicle:Vehicle)
+  pre FrontCarFollowingSomeone: not (vehicle.frontcar.isUndefined)
+  pre FrontCarFollowedByNobody: vehicle.following.isUndefined
+  pre FrontCarNaviOn: vehicle.navigator.isAlive=true
+  pre VehicleEntryFollowingNoOne: self.frontcar.isUndefined
+  pre VehicleEntryNoNavigator: self.navigator.isAlive = false
+  post FrontCarStillFollowingSomeone: not (vehicle.frontcar.isUndefined)
+  post FrontCarNowFollowedBySelf: vehicle.following = self
+  post FrontCarNaviStillOn: vehicle.navigator.isAlive=true
+  post VehicleEntryNowFollowingSomeone: self.frontcar = vehicle
+  post VehicleEntryNowNavigatorOn: self.navigator.isAlive = true
+    
+  
+  leaveConvoy()
+  pre VehicleIsFollowing: self.frontcar.isUndefined = false
+  pre VehicleHeadFollowed: self.frontcar.following = self
+  pre VehicleStartedNoNavigator: self.navigator.isAlive = true
+  post VehicleHeadNotLongerFollowed: not Vehicle.allInstances->exists(v | v.following = self)
+  post VehicleLeavingNoNavigator: self.navigator.isAlive = false
+  post VehicleLeavingNotFollowing: self.frontcar.isUndefined
+  
+  respectSpeedLimit(speed : Integer) : Boolean = if self.Speed = speed then true else false endif
+  
+  vehicleNeedRepair() : Boolean = if self.navigator.checkengine.isOk = false then false else true endif
+  
+  changeLane(lane : Lane)
+  pre LaneNotCurrentLane: not (self.lane = lane)
+  post LaneNowCurrentLane: self.lane = lane
+  post LaneNotOldLane: not (self.lane = self.lane@pre)
+  
+  setDestination(dest : Destination)
+  pre DestinationNotCurrentDestination: not (self.navigator.destination = dest)
+  pre NavigatorOn: self.navigator.isAlive = true
+  post DestinationNowCurrentDestination: self.navigator.destination = dest
+  post DestinationNowOldDestination: not (self.navigator.destination = self.navigator.destination@pre)
+  post NavigatorStillOn: self.navigator.isAlive = true
 end
 
 -- une facon unique d'identifier un vehicule a cause
@@ -92,6 +134,7 @@ end
 class Brand
 attributes
   Length : Integer
+  Name : String
 end
 
 -- permet a l'utilisateur de ce faire guider automatiquement
@@ -109,11 +152,11 @@ class GlobalWeather
 attributes
   SafeDistanceRatio : Real
 operations
-  calculateSafeDistance (weaterType:WeatherType) : Real =
-    if weaterType=#cloudy or weaterType=#sunny then
+  calculateSafeDistance (weatherType:WeatherType) : Real =
+  if weatherType=#cloudy or weatherType=#sunny then
       1.0
     else
-      if weaterType=#raining then
+      if weatherType=#raining then
         0.9
       else
         0.75
@@ -133,26 +176,53 @@ end
 -- Contraints
 -- ==========
 
-constraints Object 
-  inv NoObjectsCollide:
-  not Object.allInstance()->exists(o : Object | o.position = self.position)
+constraints
 
+context Garage::repairVehicle(vehicle : Vehicle)
+  pre vehicleAtPosition: vehicle.Position = self.Position
+  pre vehicleNeedsRepair: vehicle.navigator.checkengine.isOk = false
+  pre GarageCanRepair: self.brands->exists(b | b.Name = vehicle.brand.Name)
+  post repaired: vehicle.navigator.checkengine.isOk = true
+
+-- en aucun temps, un objet dans une ligne peut avoir la même position 
+-- qu'un autre objet.
+context Lane inv NoObjectsCollide:
+  self.objects.Position->asSet()->size() = self.objects.Position->asBag()->size()
+
+-- En aucun temps, le leader d'un convoi ne peut être sur le navigateur
+context Vehicle inv ConvoyLeaderNotNaviOn:
+  self.frontcar.isUndefined implies self.navigator.isAlive = false
+  
+-- En aucun temps, deux véhicules ne peuvent être suivi par le même véhicule.
+context Vehicle inv NotFollowedByTheSameVehicle:
+  Vehicle.allInstances->collect(v | v.frontcar)->size() = Vehicle.allInstances->collect(v | v.frontcar)->asSet()->size() 
+
+-- Un véhicule ne peut aller plus rapidement que la limite de vitesse
+-- de l'autoroute le permet.
+context Vehicle inv RespectMaxSpeed:
+  self.Speed <= self.lane.highway.MaxSpeed
+  
+  -- Un véhicule ne peut aller plus rapidement que la limite de vitesse
+-- de l'autoroute le permet.
+context Vehicle inv RespectMinSpeed:
+  self.Speed >= self.lane.highway.MinSpeed
+  
 -- ============
 -- Associations
 -- ============
 
-association Lanes between
+association LanesLink between
   Highway[1] role highway
   Lane[1..*] role lanes
 end
 
-association Objects between
-  Lane[1] role Lane
+association ObjectsLink between
+  Lane[1] role lane
   Object[*] role objects
 end
 
-association Destinations between
-  Lane[1] role Lane
+association DestinationsLink between
+  Lane[1] role lane
   Destination[*] role destinations
 end
 
@@ -161,37 +231,32 @@ association canRepair between
   Brand[1..*] role brands
 end
 
-association FollowedBy between
-  Vehicle[1] role head
-  Vehicle[1] role followed
+association FollowingLink between
+  Vehicle[0..1] role frontcar
+  Vehicle[0..1] role following
 end
 
-association Following between
-  Vehicle[1] role following
-  Vehicle[1] role frontcar
-end
-
-association Navigator between
+association NavigatorLink between
   Vehicle[1] role installation
   Navigator[1] role navigator
 end
 
-association Brand between
+association BrandLink between
   Vehicle[1] role vehicle
   Brand[1] role brand
 end
 
-association Destination between
+association DestinationLink between
   Navigator[1] role mobile
   Destination[1] role destination
 end
 
-association CheckEngine between
+association CheckEngineLink between
   Navigator[1] role commander
   CheckEngine[1] role checkengine
 end
 
-association GlobalWeather between
+association GlobalWeatherLink between
   Navigator[1] role commander
   GlobalWeather[1] role weathersystem
 end
