@@ -213,7 +213,7 @@ constraints
 -- en aucun temps, un objet dans une ligne peut avoir la même position 
 -- qu'un autre objet.
 context Lane inv NoObjectsCollide:
-  self.objects->asSet()->size() = self.objects->asBag()->size()
+  self.objects.Position->asSet()->size() = self.objects.Position->asBag()->size()
 
 -- Un véhicule ne peut aller plus rapidement que la limite de vitesse
 -- de l'autoroute le permet.

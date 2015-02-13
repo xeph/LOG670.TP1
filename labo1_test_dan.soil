@@ -33,7 +33,7 @@
 !create ve1 : Vehicle
 !set ve1.Speed := 70
 !set ve1.FuelLevel := 100
-!set ve1.Position := 7
+!set ve1.Position := 6
 !insert (ve1,br1) into BrandLink
 !insert (ve1,na1) into NavigatorLink
 
