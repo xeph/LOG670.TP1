@@ -178,10 +178,10 @@
 ?hw.everyVehiclesRespectSpeedLimit()
 
 -- ----------------------------
--- canRepair(vehicle : Vehicle)
+-- checkBrandList(vehicle : Vehicle)
 -- ----------------------------
 
-?ga.canRepair(ve)
+?ga.checkBrandList(ve)
 
 -- ----------------------------------
 -- respectSpeedLimit(speed : Integer)
