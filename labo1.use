@@ -139,7 +139,7 @@ operations
   
   respectSpeedLimit(speed : Integer) : Boolean = if self.Speed = speed then true else false endif
   
-  vehicleNeedRepair() : Boolean = if self.Navi.checkengine.isOk = false then false else true endif
+  vehicleNeedRepair() : Boolean = if self.navigator.checkengine.isOk = false then false else true endif
   
   changeLane(lane : Lane)
   pre LaneNotCurrentLane: not (self.lane = lane)
@@ -206,7 +206,7 @@ constraints
 -- en aucun temps, un objet dans une ligne peut avoir la même position 
 -- qu'un autre objet.
 context Lane inv NoObjectsCollide:
-  self.objects.Position->asSet()->size() = self.objects.Position->asBag()->size()
+  self.objects->asSet()->size() = self.objects->asBag()->size()
 
 -- Un véhicule ne peut aller plus rapidement que la limite de vitesse
 -- de l'autoroute le permet.
