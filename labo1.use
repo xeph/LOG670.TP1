@@ -65,10 +65,10 @@ end
 class Garage < Destination
 attributes
 operations
-  canRepair(vehicle : Vehicle) : Boolean
+  checkRepairBrand(vehicle : Vehicle) : Boolean
   post ReturnValue : result = self.brands->exists(b | b.Name = vehicle.brand.Name)
   
-  checkBrandList(vehicle : Vehicle)
+  repairVehicle(vehicle : Vehicle)
   begin
     vehicle.Navi.checkengine.isOk := true
   end
@@ -92,8 +92,8 @@ attributes
 operations
   startConvoy(vehicle:Vehicle)
   begin
-    self.Following := vehicle;
-    vehicle.FollowedBy := self;
+    self.FollowedBy := vehicle;
+    vehicle.Following := self;
     vehicle.Navi.isAlive := true;
   end
   pre VehicleStartingNotFollowing: self.Following.isUndefined
@@ -106,6 +106,24 @@ operations
   post VehicleStartedNoNavigator: self.Navi.isAlive = false
   post VehicleEnteredFollowing: vehicle.Following = self
   post VehicleEnteredNavigatorOn: vehicle.Navi.isAlive=true
+  
+  joinConvoy(vehicle:Vehicle)
+  begin
+    self.Following := vehicle;
+    vehicle.FollowedBy := self;
+    self.Navi.isAlive := true;
+  end
+  pre FrontCarFollowingSomeone: not (vehicle.Following.isUndefined)
+  pre FrontCarFollowedByNobody: vehicle.FollowedBy.isUndefined
+  pre FrontCarNaviOn: vehicle.Navi.isAlive=true
+  pre VehicleEntryFollowingNoOne: self.Following.isUndefined
+  pre VehicleEntryNoNavigator: vehicle.Navi.isAlive = false
+  pre FrontCarStillFollowingSomeone: not (vehicle.Following.isUndefined)
+  pre FrontCarNowFollowedBySelf: vehicle.FollowedBy = self
+  pre FrontCarNaviStillOn: vehicle.Navi.isAlive=true
+  pre VehicleEntryNowFollowingSomeone: self.Following = vehicle
+  pre VehicleEntryNowNavigatorOn: vehicle.Navi.isAlive = true
+    
   
   leaveConvoy()
   begin
