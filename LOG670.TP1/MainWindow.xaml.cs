@@ -42,6 +42,10 @@ namespace LOG670.TP1
             Car.VerticalAlignment = System.Windows.VerticalAlignment.Center;
             Car.Fill = Brushes.CornflowerBlue;
             Lane2.Children.Add(Car);
+
+            Vehicle c1 = new Vehicle();
+            Vehicle c2 = new Vehicle();
+            c1.Following = c2;
         }
 
         private Boolean ValidateInvariants()
