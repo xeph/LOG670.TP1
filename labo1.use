@@ -30,13 +30,13 @@ attributes
   MaxSpeed : Integer
   MinSpeed : Integer
 operations
-  everyVehiclesRespectSpeedLimit() : Boolean
-  post ReturnValue : self.lanes->forAll(l | 
+  everyVehiclesRespectSpeedLimit() : Boolean =
+	self.lanes->forAll(l | 
     l.objects->forAll(o | 
       if o.oclIsTypeOf(Vehicle) then
-        result = o.oclAsType(Vehicle).Speed <= MaxSpeed and o.oclAsType(Vehicle).Speed >= MinSpeed 
+        o.oclAsType(Vehicle).Speed <= MaxSpeed and o.oclAsType(Vehicle).Speed >= MinSpeed 
       else
-        result = true
+        true
       endif)
       )
 end
@@ -65,8 +65,7 @@ end
 class Garage < Destination
 attributes
 operations
-  checkRepairBrand(vehicle : Vehicle) : Boolean
-  post ReturnValue : result = self.brands->exists(b | b.Name = vehicle.brand.Name)
+  checkRepairBrand(vehicle : Vehicle) : Boolean = self.brands->exists(b | b.Name = vehicle.brand.Name)
   
   repairVehicle(vehicle : Vehicle)
   begin
@@ -138,15 +137,9 @@ operations
   post VehicleLeavingNoNavigator: self.Navi.isAlive = false
   post VehicleLeavingNotFollowing: self.FollowedBy.isUndefined
   
-  respectSpeedLimit (speed : Integer) : Boolean
-  post ReturnValue : if self.Speed = speed then
-    result = true
-  else
-    result = false
-  endif
+  respectSpeedLimit(speed : Integer) : Boolean = if self.Speed = speed then true else false endif
   
-  vehicleNeedRepair() : Boolean
-  post ReturnValue : result = (self.Navi.checkengine.isOk = false)
+  vehicleNeedRepair() : Boolean = if self.Navi.checkengine.isOk = false then false else true endif
   
   changeLane(lane : Lane)
   pre LaneNotCurrentLane: not (self.lane = lane)
@@ -184,14 +177,14 @@ class GlobalWeather
 attributes
   SafeDistanceRatio : Real
 operations
-  calculateSafeDistance (weatherType:WeatherType) : Real
-    post ReturnValue : if weatherType=#cloudy or weatherType=#sunny then
-      result = 1.0
+  calculateSafeDistance (weatherType:WeatherType) : Real =
+  if weatherType=#cloudy or weatherType=#sunny then
+      1.0
     else
       if weatherType=#raining then
-        result = 0.9
+        0.9
       else
-        result = 0.75
+        0.75
       endif
     endif
 end
