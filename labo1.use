@@ -68,7 +68,7 @@ operations
   canRepair(vehicle : Vehicle) : Boolean
   post ReturnValue : result = self.brands->exists(b | b.Name = vehicle.brand.Name)
   
-  repairCar(vehicle : Vehicle)
+  checkBrandList(vehicle : Vehicle)
   begin
     vehicle.Navi.checkengine.isOk := true
   end
