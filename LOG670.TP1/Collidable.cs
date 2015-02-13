@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LOG670.TP1
 {
@@ -36,9 +32,9 @@ namespace LOG670.TP1
             return dX <= rightest.Width || dY <= topest.Height;
         }
 
-        public string ToString()
+        public override string ToString()
         {
-            return this.Object.ToString() + " " + X.ToString() + " " + Y.ToString() + " " + Width.ToString() + " " + Height.ToString();
+            return this.Object.ToString() + " " + X + " " + Y + " " + Width + " " + Height;
         }
     }
 }

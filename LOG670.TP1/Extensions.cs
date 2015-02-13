@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -61,7 +59,7 @@ namespace LOG670.TP1
 
         public static T Show<T>(this T t, String Format = "{0}")
         {
-            Console.Out.WriteLine(String.Format(Format, t));
+            Console.Out.WriteLine(Format, t);
             return t;
         }
 
