@@ -295,7 +295,7 @@
       <hidden>false</hidden>
     </edgeproperty>
     <edgeproperty kind="target" type="rolename" userDefined="false">
-      <name>frontcar</name>
+      <name>following</name>
       <x_coord>684.771650881313</x_coord>
       <y_coord>241.5</y_coord>
       <hidden>false</hidden>
@@ -307,8 +307,8 @@
       <hidden>false</hidden>
     </edgeproperty>
     <edgeproperty kind="source" type="rolename" userDefined="false">
-      <name>following</name>
-      <x_coord>657.506025881313</x_coord>
+      <name>frontcar</name>
+      <x_coord>662.068525881313</x_coord>
       <y_coord>266.0</y_coord>
       <hidden>false</hidden>
     </edgeproperty>
@@ -564,82 +564,6 @@
       <y_coord>366.0</y_coord>
       <hidden>false</hidden>
       <id>1</id>
-      <specialid>2</specialid>
-    </edgeproperty>
-    <hidden>false</hidden>
-  </edge>
-  <edge type="BinaryEdge">
-    <source>Vehicle</source>
-    <target>Vehicle</target>
-    <name>FollowedByLink</name>
-    <edgeproperty type="associationName" userDefined="false">
-      <name>FollowedByLink</name>
-      <x_coord>682.998213381313</x_coord>
-      <y_coord>291.0</y_coord>
-      <hidden>false</hidden>
-    </edgeproperty>
-    <edgeproperty kind="target" type="rolename" userDefined="false">
-      <name>followed</name>
-      <x_coord>684.771650881313</x_coord>
-      <y_coord>216.5</y_coord>
-      <hidden>false</hidden>
-    </edgeproperty>
-    <edgeproperty kind="target" type="multiplicity" userDefined="false">
-      <name>0..1</name>
-      <x_coord>657.131025881313</x_coord>
-      <y_coord>216.5</y_coord>
-      <hidden>false</hidden>
-    </edgeproperty>
-    <edgeproperty kind="source" type="rolename" userDefined="false">
-      <name>head</name>
-      <x_coord>678.162275881313</x_coord>
-      <y_coord>192.0</y_coord>
-      <hidden>false</hidden>
-    </edgeproperty>
-    <edgeproperty kind="source" type="multiplicity" userDefined="false">
-      <name>0..1</name>
-      <x_coord>712.771650881313</x_coord>
-      <y_coord>192.0</y_coord>
-      <hidden>false</hidden>
-    </edgeproperty>
-    <edgeproperty type="WayPoint" userDefined="false">
-      <name>0</name>
-      <x_coord>710.771650881313</x_coord>
-      <y_coord>251.0</y_coord>
-      <hidden>false</hidden>
-      <id>0</id>
-      <specialid>1</specialid>
-    </edgeproperty>
-    <edgeproperty type="WayPoint" userDefined="false">
-      <name>1</name>
-      <x_coord>758.771650881313</x_coord>
-      <y_coord>251.0</y_coord>
-      <hidden>false</hidden>
-      <id>1</id>
-      <specialid>3</specialid>
-    </edgeproperty>
-    <edgeproperty type="WayPoint" userDefined="false">
-      <name>2</name>
-      <x_coord>758.771650881313</x_coord>
-      <y_coord>283.0</y_coord>
-      <hidden>false</hidden>
-      <id>2</id>
-      <specialid>4</specialid>
-    </edgeproperty>
-    <edgeproperty type="WayPoint" userDefined="false">
-      <name>3</name>
-      <x_coord>682.771650881313</x_coord>
-      <y_coord>283.0</y_coord>
-      <hidden>false</hidden>
-      <id>3</id>
-      <specialid>5</specialid>
-    </edgeproperty>
-    <edgeproperty type="WayPoint" userDefined="false">
-      <name>4</name>
-      <x_coord>682.771650881313</x_coord>
-      <y_coord>275.5</y_coord>
-      <hidden>false</hidden>
-      <id>4</id>
       <specialid>2</specialid>
     </edgeproperty>
     <hidden>false</hidden>

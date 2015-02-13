@@ -206,35 +206,25 @@ constraints
 -- en aucun temps, un objet dans une ligne peut avoir la même position 
 -- qu'un autre objet.
 context Lane inv NoObjectsCollide:
-  self.objects->asSet()->size() = self.objects->asBag()->size()
+  self.objects.Position->asSet()->size() = self.objects.Position->asBag()->size()
+
+-- En aucun temps, le leader d'un convoi ne peut être sur le navigateur
+context Vehicle inv ConvoyLeaderNotNaviOn:
+  self.frontcar.isUndefined implies self.navigator.isAlive = false
+  
+-- En aucun temps, deux véhicules ne peuvent être suivi par le même véhicule.
+context Vehicle inv NotFollowedByTheSameVehicle:
+  Vehicle.allInstances->collect(v | v.frontcar)->size() = Vehicle.allInstances->collect(v | v.frontcar)->asSet()->size() 
 
 -- Un véhicule ne peut aller plus rapidement que la limite de vitesse
 -- de l'autoroute le permet.
 context Vehicle inv RespectMaxSpeed:
   self.Speed <= self.lane.highway.MaxSpeed
-
--- Un véhicule qui a un autre véhicule qui le suit, se doit d'avoir
--- lui-même en tant que véhicule de tête pour le véhicule qui le suit.
-context Vehicle inv FollowedByTheFollowing:
-  self.frontcar.isUndefined=false implies self.frontcar.following = self
-
--- En aucun temps, deux véhicules ne peuvent être suivi par le même véhicule.
-context Vehicle inv NotFollowedByTheSameVehicle:
-  Vehicle.allInstances->collect(v | v.frontcar)->size() = Vehicle.allInstances->collect(v | v.frontcar)->asSet()->size() 
   
-  
--- En aucun temps, deux véhicules ne peuvent suivre le même véhicule.
-context Vehicle inv NotFollowingTheSameVehicle:
-  Vehicle.allInstances->collect(v | v.following)->size() = Vehicle.allInstances->collect(v | v.following)->asSet()->size() 
-  
--- Un véhicule qui suit un autre véhicule, se doit d'avoir
--- lui-même en tant que véhicule suivant le véhicule de tête.
-context Vehicle inv FollowingTheFollowedBy:
-  self.following.isUndefined=false implies self.following.frontcar = self
-  
--- Un véhicule suivant un autre doit avoir son navigateur actif.
-context Vehicle inv NaviOnWhileFollowing:
-  self.following.isUndefined=false implies self.navigator.isAlive=true
+  -- Un véhicule ne peut aller plus rapidement que la limite de vitesse
+-- de l'autoroute le permet.
+context Vehicle inv RespectMinSpeed:
+  self.Speed >= self.lane.highway.MinSpeed
   
 -- ============
 -- Associations
@@ -260,14 +250,9 @@ association canRepair between
   Brand[1..*] role brands
 end
 
-association FollowedByLink between
-  Vehicle[0..1] role head
-  Vehicle[0..1] role followed
-end
-
 association FollowingLink between
-  Vehicle[0..1] role following
   Vehicle[0..1] role frontcar
+  Vehicle[0..1] role following
 end
 
 association NavigatorLink between
