@@ -43,8 +43,9 @@ namespace LOG670.TP1
             Car.Fill = Brushes.CornflowerBlue;
             Lane2.Children.Add(Car);
 
-            Vehicle c1 = new Vehicle();
-            Vehicle c2 = new Vehicle();
+            Vehicle c1 = new Vehicle(0, 1, null, null, 1, new Classes.Navigator(false, null, 1, null), null);
+            Vehicle c2 = new Vehicle(0, 1, null, null, 1, new Classes.Navigator(false, null, 1, null), null);
+
             c1.Following = c2;
         }
 
