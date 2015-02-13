@@ -74,6 +74,7 @@ operations
   end
   pre vehicleAtPosition: vehicle.Position = self.Position
   pre vehicleNeedsRepair: vehicle.Navi.checkengine.isOk = false
+  pre GarageCanRepair: self.brands->exists(b | b.Name = vehicle.brand.Name)
   post repaired: vehicle.Navi.checkengine.isOk = true
 end
 
@@ -165,11 +166,11 @@ class GlobalWeather
 attributes
   SafeDistanceRatio : Real
 operations
-  calculateSafeDistance (weaterType:WeatherType) : Real
-    post ReturnValue : if weaterType=#cloudy or weaterType=#sunny then
+  calculateSafeDistance (weatherType:WeatherType) : Real
+    post ReturnValue : if weatherType=#cloudy or weatherType=#sunny then
       result = 1.0
     else
-      if weaterType=#raining then
+      if weatherType=#raining then
         result = 0.9
       else
         result = 0.75
@@ -228,17 +229,17 @@ context Vehicle inv NaviOnWhileFollowing:
 -- Associations
 -- ============
 
-association Lanes between
+association LanesLink between
   Highway[1] role highway
   Lane[1..*] role lanes
 end
 
-association Objects between
+association ObjectsLink between
   Lane[1] role lane
   Object[*] role objects
 end
 
-association Destinations between
+association DestinationsLink between
   Lane[1] role lane
   Destination[*] role destinations
 end
@@ -248,37 +249,37 @@ association canRepair between
   Brand[1..*] role brands
 end
 
-association FollowedBy between
+association FollowedByLink between
   Vehicle[0..1] role head
   Vehicle[0..1] role followed
 end
 
-association Following between
+association FollowingLink between
   Vehicle[0..1] role following
   Vehicle[0..1] role frontcar
 end
 
-association Navigator between
+association NavigatorLink between
   Vehicle[1] role installation
   Navigator[1] role navigator
 end
 
-association Brand between
+association BrandLink between
   Vehicle[1] role vehicle
   Brand[1] role brand
 end
 
-association Destination between
+association DestinationLink between
   Navigator[1] role mobile
   Destination[1] role destination
 end
 
-association CheckEngine between
+association CheckEngineLink between
   Navigator[1] role commander
   CheckEngine[1] role checkengine
 end
 
-association GlobalWeather between
+association GlobalWeatherLink between
   Navigator[1] role commander
   GlobalWeather[1] role weathersystem
 end
