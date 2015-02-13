@@ -81,18 +81,24 @@
 !set hw.MaxSpeed := 100
 !set hw.MinSpeed := 70
 
-!insert (hw, Set{la1, la2}) into Lanes
-!insert (la1, Set{ob1, ob2}) into Objects
-!insert (la1, Set{de1, de2}) into Destinations
+!insert (hw, Set{la1, la2}) into LanesLink
+!insert (la1, Set{ob1, ob2}) into ObjectsLink
+!insert (la1, Set{de1, de2}) into DestinationsLink
 !insert (ga, Set{br1, br2}) into canRepair
-!insert (ve, ve2) into FollowedBy
-!insert (ve2, ve) into Following
-!insert (ve, br1) into Brand
-!insert (ve2, br2) into Brand
-!insert (na, de1) into Destination
-!insert (na, de2) into Destination
-!insert (na, ch) into CheckEngine
-!insert (na, gw) into GlobalWeather
+!insert (ve, ve2) into FollowedByLink
+!insert (ve2, ve) into FollowingLink
+!insert (ve, na1) into NavigatorLink
+!insert (ve2, na2) into NavigatorLink
+!insert (ve, br1) into BrandLink
+!insert (ve2, br2) into BrandLink
+!insert (na1, de1) into DestinationLink
+!insert (na1, de2) into DestinationLink
+!insert (na2, de1) into DestinationLink
+!insert (na2, de2) into DestinationLink
+!insert (na1, ch1) into CheckEngineLink
+!insert (na2, ch2) into CheckEngineLink
+!insert (na1, gw) into GlobalWeatherLink
+!insert (na2, gw) into GlobalWeatherLink
 
 -- ==========
 -- Invariants
