@@ -68,13 +68,6 @@ operations
   checkRepairBrand(vehicle : Vehicle) : Boolean = self.brands->exists(b | b.Name = vehicle.brand.Name)
   
   repairVehicle(vehicle : Vehicle)
-  begin
-    vehicle.Navi.checkengine.isOk := true
-  end
-  pre vehicleAtPosition: vehicle.Position = self.Position
-  pre vehicleNeedsRepair: vehicle.Navi.checkengine.isOk = false
-  pre GarageCanRepair: self.brands->exists(b | b.Name = vehicle.brand.Name)
-  post repaired: vehicle.Navi.checkengine.isOk = true
 end
 
 -- moyen de transport motorise
@@ -202,6 +195,12 @@ end
 -- ==========
 
 constraints
+
+context Garage::repairVehicle(vehicle : Vehicle)
+  pre vehicleAtPosition: vehicle.Position = self.Position
+  pre vehicleNeedsRepair: vehicle.navigator.checkengine.isOk = false
+  pre GarageCanRepair: self.brands->exists(b | b.Name = vehicle.brand.Name)
+  post repaired: vehicle.navigator.checkengine.isOk = true
 
 -- en aucun temps, un objet dans une ligne peut avoir la même position 
 -- qu'un autre objet.
