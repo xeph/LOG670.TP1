@@ -59,10 +59,17 @@ namespace LOG670.TP1
             return t;
         }
 
+        public static T Show<T>(this T t, String Format = "{0}")
+        {
+            Console.Out.WriteLine(String.Format(Format, t));
+            return t;
+        }
+
         public static IEnumerable<T> ShowCount<T>(IEnumerable<T> ts)
         {
             ts.Count().Show();
             return ts;
         }
+
     }
 }
