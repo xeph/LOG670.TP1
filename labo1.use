@@ -85,28 +85,28 @@ operations
   pre VehicleStartingNoNavigator: self.navigator.isAlive = false
   pre VehicleEntryNotFollowing: vehicle.following.isUndefined
   pre VehicleEntryNoNavigator: vehicle.navigator.isAlive = false
-  post VehicleStartedNotFollowing: self.following.isUndefined
-  post VehicleStartedFollowed: self.frontcar = vehicle
+  post VehicleStartedNotFollowing: self.frontcar.isUndefined
+  post VehicleStartedFollowed: self.following = vehicle
   post VehicleStartedNoNavigator: self.navigator.isAlive = false
-  post VehicleEnteredFollowing: vehicle.following = self
+  post VehicleEnteredFollowing: vehicle.frontcar = self
   post VehicleEnteredNavigatorOn: vehicle.navigator.isAlive=true
   
   joinConvoy(vehicle:Vehicle)
-  pre FrontCarFollowingSomeone: not (vehicle.following.isUndefined)
-  pre FrontCarFollowedByNobody: vehicle.frontcar.isUndefined
+  pre FrontCarFollowingSomeone: not (vehicle.frontcar.isUndefined)
+  pre FrontCarFollowedByNobody: vehicle.following.isUndefined
   pre FrontCarNaviOn: vehicle.navigator.isAlive=true
-  pre VehicleEntryFollowingNoOne: self.following.isUndefined
-  pre VehicleEntryNoNavigator: vehicle.navigator.isAlive = false
-  pre FrontCarStillFollowingSomeone: not (vehicle.following.isUndefined)
-  pre FrontCarNowFollowedBySelf: vehicle.frontcar = self
-  pre FrontCarNaviStillOn: vehicle.navigator.isAlive=true
-  pre VehicleEntryNowFollowingSomeone: self.following = vehicle
-  pre VehicleEntryNowNavigatorOn: vehicle.navigator.isAlive = true
+  pre VehicleEntryFollowingNoOne: self.frontcar.isUndefined
+  pre VehicleEntryNoNavigator: self.navigator.isAlive = false
+  post FrontCarStillFollowingSomeone: not (vehicle.frontcar.isUndefined)
+  post FrontCarNowFollowedBySelf: vehicle.following = self
+  post FrontCarNaviStillOn: vehicle.navigator.isAlive=true
+  post VehicleEntryNowFollowingSomeone: self.frontcar = vehicle
+  post VehicleEntryNowNavigatorOn: self.navigator.isAlive = true
     
   
   leaveConvoy()
-  pre VehicleIsFollowing: self.following.isUndefined = false
-  pre VehicleHeadFollowed: self.following.frontcar = self
+  pre VehicleIsFollowing: self.frontcar.isUndefined = false
+  pre VehicleHeadFollowed: self.frontcar.following = self
   pre VehicleStartedNoNavigator: self.navigator.isAlive = true
   post VehicleHeadNotLongerFollowed: not Vehicle.allInstances->exists(v | v.following = self)
   post VehicleLeavingNoNavigator: self.navigator.isAlive = false

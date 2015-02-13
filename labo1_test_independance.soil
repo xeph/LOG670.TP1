@@ -2,7 +2,7 @@
 !set gw1.SafeDistanceRatio := 0.95
 
 !create gw2 : GlobalWeather
-!set gw1.SafeDistanceRatio := 0.95
+!set gw2.SafeDistanceRatio := 0.95
 
 !create ch1 : CheckEngine
 !set ch1.isOk := true
