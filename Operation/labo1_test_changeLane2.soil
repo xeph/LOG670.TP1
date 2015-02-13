@@ -1,0 +1,39 @@
+!create gw1 : GlobalWeather
+!set gw1.SafeDistanceRatio := 0.95
+
+!create ch1 : CheckEngine
+!set ch1.isOk := true
+
+!create br1 : Brand
+!set br1.Length := 3
+!set br1.Name := 'Toyota'
+
+!create na1 : Navigator
+!set na1.isAlive := false
+!set na1.CruiseSpeed := 70
+!insert (na1,gw1) into GlobalWeatherLink
+!insert (na1,ch1) into CheckEngineLink
+
+!create ve1 : Vehicle
+!set ve1.Speed := 70
+!set ve1.FuelLevel := 100
+!set ve1.Position := 6
+!insert (ve1,br1) into BrandLink
+!insert (ve1,na1) into NavigatorLink
+
+!create hw : Highway
+!set hw.Length := 100
+!set hw.MaxSpeed := 100
+!set hw.MinSpeed := 60
+
+!create la1 : Lane
+!create la2 : Lane
+!insert (hw,la1) into LanesLink
+!insert (hw,la2) into LanesLink
+
+!insert (la2,ve1) into ObjectsLink
+
+!openter ve1 changeLane(la2)
+!delete (la2,ve1) from ObjectsLink
+!insert (la1,ve1) into ObjectsLink
+!opexit

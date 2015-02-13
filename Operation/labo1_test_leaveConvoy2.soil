@@ -1,0 +1,65 @@
+!create gw1 : GlobalWeather
+!set gw1.SafeDistanceRatio := 0.95
+
+!create gw2 : GlobalWeather
+!set gw2.SafeDistanceRatio := 0.95
+
+!create ch1 : CheckEngine
+!set ch1.isOk := true
+
+!create ch2 : CheckEngine
+!set ch2.isOk := true
+
+!create br1 : Brand
+!set br1.Length := 3
+!set br1.Name := 'Toyota'
+
+!create br2 : Brand
+!set br2.Length := 2
+!set br2.Name := 'Honda'
+
+!create na1 : Navigator
+!set na1.isAlive := false
+!set na1.CruiseSpeed := 70
+!insert (na1,gw1) into GlobalWeatherLink
+!insert (na1,ch1) into CheckEngineLink
+
+!create na2 : Navigator
+!set na2.isAlive := false
+!set na2.CruiseSpeed := 70
+!insert (na2,gw2) into GlobalWeatherLink
+!insert (na2,ch2) into CheckEngineLink
+
+!create ve1 : Vehicle
+!set ve1.Speed := 70
+!set ve1.FuelLevel := 100
+!set ve1.Position := 6
+!insert (ve1,br1) into BrandLink
+!insert (ve1,na1) into NavigatorLink
+
+!create ve2 : Vehicle
+!set ve2.Speed := 70
+!set ve2.FuelLevel := 100
+!set ve2.Position := 7
+!insert (ve2,br2) into BrandLink
+!insert (ve2,na2) into NavigatorLink
+
+!create hw : Highway
+!set hw.Length := 100
+!set hw.MaxSpeed := 100
+!set hw.MinSpeed := 60
+
+!create la1 : Lane
+!create la2 : Lane
+!insert (hw,la1) into LanesLink
+!insert (hw,la2) into LanesLink
+
+!insert (la2,ve1) into ObjectsLink
+!insert (la2,ve2) into ObjectsLink
+
+!set na2.isAlive := true
+
+!openter ve2 leaveConvoy()
+!set na2.isAlive := false
+!delete (ve1, ve2) from FollowingLink
+!opexit
