@@ -8,8 +8,11 @@
 !create gw : GlobalWeather
 !set gw.SafeDistanceRatio := 0.95
 
-!create ch : CheckEngine
-!set ch.isOk := true
+!create ch1 : CheckEngine
+!set ch1.isOk := true
+
+!create ch2 : CheckEngine
+!set ch2.isOk := true
 
 !create br1 : Brand
 !set br1.Length := 3
@@ -30,19 +33,34 @@
 !set de2.Position := 6
 !set de2.HasGaz := true
 
-!create na : Navigator
-!set na.isAlive := true
-!set na.Destination := Set{de1, de2}
-!set na.CruiseSpeed := 70
-!set na.CheckEngine := ch
+!create na1 : Navigator
+!set na1.isAlive := true
+!set na1.Destination := Set{de1, de2}
+!set na1.CruiseSpeed := 70
+!set na1.CheckEngine := ch1
+
+!create na2 : Navigator
+!set na2.isAlive := true
+!set na2.Destination := Set{de1, de2}
+!set na2.CruiseSpeed := 70
+!set na2.CheckEngine := ch2
 
 !create ve : Vehicle
 !set ve.Speed := 70
---!set ve.FollowedBy := 
+!set ve.FollowedBy := ve2
 --!set ve.Following := 
 !set ve.FuelLevel := 100
-!set ve.Navigator := na
+!set ve.Navigator := na1
 !set ve.Brand := br1
+
+!create ve2 : Vehicle
+!set ve2.Speed := 70
+--!set ve2.FollowedBy := 
+!set ve2.Following := ve
+!set ve2.FuelLevel := 100
+!set ve2.Navigator := na2
+!set ve2.Brand := br2
+
 
 !create ob1 : Object
 !set ob1.Position := 5
@@ -62,6 +80,19 @@
 !set hw.Length := 100
 !set hw.MaxSpeed := 100
 !set hw.MinSpeed := 70
+
+!insert (hw, Set{la1, la2}) into Lanes
+!insert (la1, Set{ob1, ob2}) into Objects
+!insert (la1, Set{de1, de2}) into Destinations
+!insert (ga, Set{br1, br2}) into canRepair
+!insert (ve, ve2) into FollowedBy
+!insert (ve2, ve) into Following
+!insert (ve, br1) into Brand
+!insert (ve2, br2) into Brand
+!insert (na, de1) into Destination
+!insert (na, de2) into Destination
+!insert (na, ch) into CheckEngine
+!insert (na, gw) into GlobalWeather
 
 -- ==========
 -- Invariants
@@ -103,42 +134,60 @@
 -- startConvoy(vehicle:Vehicle)
 -- ----------------------------
 
-!create na1 : Navigator
-!set na1.isAlive := false
-
-!create na2 : Navigator
-!set na2.isAlive := false
-
-!create ve1 : Vehicle
-!set ve1.Navigator := na1
-
-!create ve2 : Vehicle
-!set ve2.Navigator := na2
-
 !ve1.startConvoy(ve2)
 
 -- -------------
 -- LeaveConvoy()
 -- -------------
 
-!create na1 : Navigator
-!set na1.isAlive := false
-
-!create na2 : Navigator
-!set na2.isAlive := false
-
-!create ve1 : Vehicle
-!set ve1.Navigator := na1
-
-!create ve2 : Vehicle
-!set ve2.Navigator := na2
-
-!ve1.startConvoy(ve2)
 !ve2.leaveConvoy(ve1)
+
+-- ----------------------------
+-- repairCar(vehicle : Vehicle)
+-- ----------------------------
+
+!set ch1.CheckEngine := false
+!ga.repairCar(ve1)
+
+-- -----------------------
+-- changeLane(lane : Lane)
+-- -----------------------
+
+!ve1.changeLane(la2)
+
+-- ----------------------------------
+-- setDestination(dest : Destination)
+-- ----------------------------------
+
+!ve1.setDestination(de2)
 
 -- ========
 -- Requetes
 -- ========
+
+-- --------------------------------
+-- everyVehiclesRespectSpeedLimit()
+-- --------------------------------
+
+?hw.everyVehiclesRespectSpeedLimit()
+
+-- ----------------------------
+-- canRepair(vehicle : Vehicle)
+-- ----------------------------
+
+?ga.canRepair(ve)
+
+-- ----------------------------------
+-- respectSpeedLimit(speed : Integer)
+-- ----------------------------------
+
+?ve1.respectSpeedLimit(70)
+
+-- -------------------
+-- vehicleNeedRepair()
+-- -------------------
+
+?ve1.vehicleNeedRepair()
 
 -- ----------------------------------------------
 -- calculateSafeDistance (weaterType:WeatherType)
