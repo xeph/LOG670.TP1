@@ -18,14 +18,13 @@ namespace LOG670.TP1.Classes
         public int Speed { get; private set; }
         public Vehicle FollowedBy { get; private set; }
         public Vehicle Following { get; set; }
-        public Vehicle FrontCar 
+        public Vehicle ConvoyLeader 
         {
             get
             {
-                return (Following != null) ? Following.FrontCar : (FollowedBy != null) ? this : null;
+                return (Following != null) ? Following.ConvoyLeader : (FollowedBy != null) ? this : null;
             }
         }
-        public Vehicle ConvoyLeader { get; set; }
         public float FuelLevel { get; private set; }
         public Navigator TheNavigator { get; private set; }
         public Brand CarBrand { get; private set; }
@@ -59,12 +58,8 @@ namespace LOG670.TP1.Classes
             Contract.EndContractBlock();
 
             Following = vehicle;
-            ConvoyLeader = vehicle;
-            vehicle.ConvoyLeader = vehicle;
             vehicle.TheNavigator.IsActive = true;
             vehicle.FollowedBy = this;
-            
-            
         }
 
         /// <summary>
@@ -99,7 +94,6 @@ namespace LOG670.TP1.Classes
 
             vehicle.FollowedBy = this;
             Following = vehicle;
-            ConvoyLeader = vehicle.ConvoyLeader;
             TheNavigator.IsActive = true;
         }
 
@@ -130,7 +124,9 @@ namespace LOG670.TP1.Classes
             //If this is the front car, set car following you to front car, and update all following vehicles.
             if (ConvoyLeader == this)
             {
-                SetAllCarsConvoyLeader(this.FollowedBy, this.FollowedBy);
+                FollowedBy.TheNavigator.IsActive = false;
+                FollowedBy.Following = null;
+                FollowedBy = null;
             } 
             else if (FollowedBy != null) //is between first and last car
             {
@@ -144,17 +140,7 @@ namespace LOG670.TP1.Classes
 
             FollowedBy = null;
             Following = null;
-            ConvoyLeader = null;
             TheNavigator.IsActive = false;
-        }
-
-        private void SetAllCarsConvoyLeader(Vehicle newConvoyLeader, Vehicle followingVehicle)
-        {
-            followingVehicle.ConvoyLeader = newConvoyLeader;
-            if (followingVehicle.FollowedBy != null)
-            {
-                SetAllCarsConvoyLeader(newConvoyLeader, followingVehicle.FollowedBy);
-            }
         }
 
         /// <summary>
