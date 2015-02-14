@@ -1,268 +1,233 @@
 -- TP1 - USE
 -- Auteur: Daniel Desroches
 -- Date: 3 fev 2015
---
+-- 
 -- Fichier: labo1.use
---
+-- 
 -- Description:
---
-
---
-
+-- 
+-- 
 model convois
-
 -- ============
 -- Enumerations
 -- ============
-
 -- definis les types de temps possible
 enum WeatherType {cloudy, raining, snowing, sunny}
-
 -- =======
 -- classes
 -- =======
-
 -- ensemble de voies exclusivement reservee a la
 -- circulation des vehicules
 class Highway
 attributes
-  Length : Integer
-  MaxSpeed : Integer
-  MinSpeed : Integer
+Length : Integer
+MaxSpeed : Integer
+MinSpeed : Integer
 operations
-  -- Request permettant de pouvoir regarder s'il y a un véhicule qui ne
-  -- respecte pas les limites de vitesse.
-  everyVehiclesRespectSpeedLimit() : Boolean =
-	self.lanes->forAll(l | 
-    l.objects->forAll(o | 
-      if o.oclIsTypeOf(Vehicle) then
-        o.oclAsType(Vehicle).Speed <= MaxSpeed and o.oclAsType(Vehicle).Speed >= MinSpeed 
-      else
-        true
-      endif)
-      )
+-- Request permettant de pouvoir regarder s'il y a un véhicule qui ne
+-- respecte pas les limites de vitesse.
+everyVehiclesRespectSpeedLimit() : Boolean =
+self.lanes->forAll(l |
+l.objects->forAll(o |
+if o.oclIsTypeOf(Vehicle) then
+o.oclAsType(Vehicle).Speed <= MaxSpeed and o.oclAsType(Vehicle).Speed >= MinSpeed
+else
+true
+endif)
+)
 end
-
 -- voie exclusivement reservee a la circulation
 -- des vehicules
 class Lane
 attributes
 end
-
 -- obstacle se trouvant sur une voie pour obstruer
 -- la voie des vehicules
 class Object
 attributes
-  Position : Integer
+Position : Integer
 end
-
 -- lieu ou se dirige un vehicule
 class Destination
 attributes
-  Position : Integer
-  hasGaz : Boolean
+Position : Integer
+hasGaz : Boolean
 end
-
 -- s'occupe de la reparation et entretien d'un vehicule
 class Garage < Destination
 attributes
 operations
-  -- Request permettant de savoir si le véhicule peut se faire réparer
-  -- à ce garage.
-  checkRepairBrand(vehicle : Vehicle) : Boolean = self.brands->exists(b | b.Name = vehicle.brand.Name)
-  -- Operation permettant de pouvoir réparer un véhicule.
-  repairVehicle(vehicle : Vehicle)
+-- Request permettant de savoir si le véhicule peut se faire réparer
+-- à ce garage.
+checkRepairBrand(vehicle : Vehicle) : Boolean = self.brands->exists(b | b.Name = vehicle.brand.Name)
+-- Operation permettant de pouvoir réparer un véhicule.
+repairVehicle(vehicle : Vehicle)
 end
-
 -- moyen de transport motorise
-
 -- startConvoy
 -- permet de demarrer un convoi de voiture
 class Vehicle < Object
 attributes
-  Speed : Integer
-  FuelLevel : Real
+Speed : Integer
+FuelLevel : Real
 operations
-  -- Operation permettant d'informer à un véhicule qu'il démare un convoie. Le véhicule entrant
-  -- peut être une tête d'un convoi.
-  startConvoy(vehicle:Vehicle)
-  pre VehicleStartingNotFollowing: self.following.isUndefined
-  pre VehicleStartingNotFollowed: self.frontcar.isUndefined
-  pre VehicleStartingNoNavigator: not(self.navigator.isAlive)
-  pre VehicleEntryNotFollowing: vehicle.following.isUndefined
-  pre VehicleEntryNoNavigator: not(vehicle.navigator.isAlive)
-  post VehicleStartedNotFollowing: self.frontcar.isUndefined
-  post VehicleStartedFollowed: self.following = vehicle
-  post VehicleStartedNoNavigator: not(self.navigator.isAlive)
-  post VehicleEnteredFollowing: vehicle.frontcar = self
-  post VehicleEnteredNavigatorOn: vehicle.navigator.isAlive
-  -- Operation permettant de pouvoir joindre un convoi.
-  joinConvoy(vehicle:Vehicle)
-  pre FrontCarFollowingSomeone: not (vehicle.frontcar.isUndefined)
-  pre FrontCarFollowedByNobody: vehicle.followedBy.isUndefined
-  pre FrontCarNaviOn: vehicle.frontcar.navigator.isAlive
-  pre VehicleEntryFollowingNoOne: self.frontcar.isUndefined
-  pre VehicleEntryNoNavigator: not(self.navigator.isAlive)
-  post FrontCarStillFollowingSomeone: not (vehicle.frontcar.isUndefined)
-  post VehicleNowFollowedBySelf: vehicle.followedBy = self
-  post FrontCarNaviStillOn: vehicle.frontcar.navigator.isAlive
-  post VehicleEntryNowFollowingSomeone: self.frontcar = vehicle.frontcar
-  post VehicleEntryNowNavigatorOn: self.navigator.isAlive
-  -- Operation permettant de quitter un convoi.
-  leaveConvoy()
-  pre VehicleIsFollowing: not(self.frontcar.isUndefined)
-  pre VehicleHeadFollowed: self.frontcar.following = self
-  pre VehicleStartedNoNavigator: self.navigator.isAlive
-  post VehicleHeadNotLongerFollowed: not Vehicle.allInstances->exists(v | v.following = self)
-  post VehicleLeavingNoNavigator: not(self.navigator.isAlive)
-  post VehicleLeavingNotFollowing: self.frontcar.isUndefined
-  -- Request permettant de pouvoir valider que le véhicule respecte le limite de vitesse.
-  respectSpeedLimit(speed : Integer) : Boolean = if self.Speed = speed then true else false endif
-  -- Request permettant de savoir si le véhicule a besoin d'être réparé.
-  vehicleNeedRepair() : Boolean = if self.navigator.checkengine.isOk = false then false else true endif
-  -- Operation permettant de changer de ligne.
-  changeLane(lane : Lane)
-  pre LaneNotCurrentLane: not (self.lane = lane)
-  post LaneNowCurrentLane: self.lane = lane
-  post LaneNotOldLane: not (self.lane = self.lane@pre)
-  -- Operation permettant d'informer le navigateur à quelle destination que le convoi s'en va.
-  setDestination(dest : Destination)
-  pre DestinationNotCurrentDestination: not (self.navigator.destination = dest)
-  pre NavigatorOn: self.navigator.isAlive
-  post DestinationNowCurrentDestination: self.navigator.destination = dest
-  post DestinationNowOldDestination: not (self.navigator.destination = self.navigator.destination@pre)
-  post NavigatorStillOn: self.navigator.isAlive
+-- Operation permettant d'informer à un véhicule qu'il démare un convoie. Le véhicule entrant
+-- peut être une tête d'un convoi.
+startConvoy(vehicle:Vehicle)
+pre VehicleStartingNotFollowing: self.following.isUndefined
+pre VehicleStartingNotFollowed: self.frontcar.isUndefined
+pre VehicleStartingNoNavigator: self.navigator.isAlive = false
+pre VehicleEntryNotFollowing: vehicle.following.isUndefined
+pre VehicleEntryNoNavigator: vehicle.navigator.isAlive = false
+post VehicleStartedNotFollowing: self.frontcar.isUndefined
+post VehicleStartedFollowed: self.following = vehicle
+post VehicleStartedNoNavigator: self.navigator.isAlive = false
+post VehicleEnteredFollowing: vehicle.frontcar = self
+post VehicleEnteredNavigatorOn: vehicle.navigator.isAlive=true
+-- Operation permettant de pouvoir joindre un convoi.
+joinConvoy(vehicle:Vehicle)
+pre FrontCarFollowingSomeone: not (vehicle.frontcar.isUndefined)
+pre FrontCarFollowedByNobody: vehicle.following.isUndefined
+pre FrontCarNaviOn: vehicle.navigator.isAlive=true
+pre VehicleEntryFollowingNoOne: self.frontcar.isUndefined
+pre VehicleEntryNoNavigator: self.navigator.isAlive = false
+post FrontCarStillFollowingSomeone: not (vehicle.frontcar.isUndefined)
+post FrontCarNowFollowedBySelf: vehicle.following = self
+post FrontCarNaviStillOn: vehicle.navigator.isAlive=true
+post VehicleEntryNowFollowingSomeone: self.frontcar = vehicle
+post VehicleEntryNowNavigatorOn: self.navigator.isAlive = true
+-- Operation permettant de quitter un convoi.
+leaveConvoy()
+pre VehicleIsFollowing: self.frontcar.isUndefined = false
+pre VehicleHeadFollowed: self.frontcar.following = self
+pre VehicleStartedNoNavigator: self.navigator.isAlive = true
+post VehicleHeadNotLongerFollowed: not Vehicle.allInstances->exists(v | v.following = self)
+post VehicleLeavingNoNavigator: self.navigator.isAlive = false
+post VehicleLeavingNotFollowing: self.frontcar.isUndefined
+-- Request permettant de pouvoir valider que le véhicule respecte le limite de vitesse.
+respectSpeedLimit(speed : Integer) : Boolean = if self.Speed = speed then true else false endif
+-- Request permettant de savoir si le véhicule a besoin d'être réparé.
+vehicleNeedRepair() : Boolean = if self.navigator.checkengine.isOk = false then false else true endif
+-- Operation permettant de changer de ligne.
+changeLane(lane : Lane)
+pre LaneNotCurrentLane: not (self.lane = lane)
+post LaneNowCurrentLane: self.lane = lane
+post LaneNotOldLane: not (self.lane = self.lane@pre)
+-- Operation permettant d'informer le navigateur à quelle destination que le convoi s'en va.
+setDestination(dest : Destination)
+pre DestinationNotCurrentDestination: not (self.navigator.destination = dest)
+pre NavigatorOn: self.navigator.isAlive = true
+post DestinationNowCurrentDestination: self.navigator.destination = dest
+post DestinationNowOldDestination: not (self.navigator.destination = self.navigator.destination@pre)
+post NavigatorStillOn: self.navigator.isAlive = true
 end
-
 -- une facon unique d'identifier un vehicule a cause
 -- de son style personnel
 class Brand
 attributes
-  Length : Integer
-  Name : String
+Length : Integer
+Name : String
 end
-
 -- permet a l'utilisateur de ce faire guider automatiquement
 -- vers sa destination
 class Navigator
 attributes
-  CruiseSpeed : Integer
-  isAlive : Boolean
+CruiseSpeed : Integer
+isAlive : Boolean
 end
- 
 -- etat du temps exterieur qui permet de definir
 -- la distance de securite que les vehicules
 -- doivent prendre
 class GlobalWeather
 attributes
-  SafeDistanceRatio : Real
+SafeDistanceRatio : Real
 operations
-  -- Request permettant d'obtenir le modificateur de vitesse selon la température.
-  calculateSafeDistance (weatherType:WeatherType) : Real =
-  if weatherType=#cloudy or weatherType=#sunny then
-      1.0
-    else
-      if weatherType=#raining then
-        0.9
-      else
-        0.75
-      endif
-    endif
+-- Request permettant d'obtenir le modificateur de vitesse selon la température.
+calculateSafeDistance (weatherType:WeatherType) : Real =
+if weatherType=#cloudy or weatherType=#sunny then
+1.0
+else
+if weatherType=#raining then
+0.9
+else
+0.75
+endif
+endif
 end
-
 -- detecteur qui dit au conducteur du vehicule
 -- si son moteur a un probleme et il doit arreter
 -- dans un garage
 class CheckEngine
 attributes
-  isOk : Boolean
+isOk : Boolean
 end
-
 -- ==========
 -- Contraints
 -- ==========
-
 constraints
-
 context Garage::repairVehicle(vehicle : Vehicle)
-  pre vehicleAtPosition: vehicle.Position = self.Position
-  pre vehicleNeedsRepair: vehicle.navigator.checkengine.isOk = false
-  pre GarageCanRepair: self.brands->exists(b | b.Name = vehicle.brand.Name)
-  post repaired: vehicle.navigator.checkengine.isOk = true
-
--- en aucun temps, un objet dans une ligne peut avoir la même position 
+pre vehicleAtPosition: vehicle.Position = self.Position
+pre vehicleNeedsRepair: vehicle.navigator.checkengine.isOk = false
+pre GarageCanRepair: self.brands->exists(b | b.Name = vehicle.brand.Name)
+post repaired: vehicle.navigator.checkengine.isOk = true
+-- en aucun temps, un objet dans une ligne peut avoir la même position
 -- qu'un autre objet.
 context Lane inv NoObjectsCollide:
-  self.objects.Position->asSet()->size() = self.objects.Position->asBag()->size()
-
+self.objects.Position->asSet()->size() = self.objects.Position->asBag()->size()
 -- En aucun temps, le leader d'un convoi ne peut être sur le navigateur
 context Vehicle inv ConvoyLeaderNotNaviOn:
-  self.frontcar.isUndefined implies self.navigator.isAlive = false
-  
+self.frontcar.isUndefined implies self.navigator.isAlive = false
 -- En aucun temps, deux véhicules ne peuvent être suivi par le même véhicule.
 context Vehicle inv NotFollowedByTheSameVehicle:
-  Vehicle.allInstances->collect(v | v.frontcar)->size() = Vehicle.allInstances->collect(v | v.frontcar)->asSet()->size() 
-
+Vehicle.allInstances->collect(v | v.frontcar)->size() = Vehicle.allInstances->collect(v | v.frontcar)->asSet()->size()
 -- Un véhicule ne peut aller plus rapidement que la limite de vitesse
 -- de l'autoroute le permet.
 context Vehicle inv RespectMaxSpeed:
-  self.Speed <= self.lane.highway.MaxSpeed
-  
-  -- Un véhicule ne peut aller plus rapidement que la limite de vitesse
+self.Speed <= self.lane.highway.MaxSpeed
+-- Un véhicule ne peut aller plus rapidement que la limite de vitesse
 -- de l'autoroute le permet.
 context Vehicle inv RespectMinSpeed:
-  self.Speed >= self.lane.highway.MinSpeed
-  
+self.Speed >= self.lane.highway.MinSpeed
 -- ============
 -- Associations
 -- ============
-
 association LanesLink between
-  Highway[1] role highway
-  Lane[1..*] role lanes
+Highway[1] role highway
+Lane[1..*] role lanes
 end
-
 association ObjectsLink between
-  Lane[1] role lane
-  Object[*] role objects
+Lane[1] role lane
+Object[*] role objects
 end
-
 association DestinationsLink between
-  Lane[1] role lane
-  Destination[*] role destinations
+Lane[1] role lane
+Destination[*] role destinations
 end
-
 association canRepair between
-  Garage[1] role mechanic
-  Brand[1..*] role brands
+Garage[1] role mechanic
+Brand[1..*] role brands
 end
-
 association FollowingLink between
-  Vehicle[0..1] role frontcar
-  Vehicle[0..1] role following
+Vehicle[0..1] role frontcar
+Vehicle[0..1] role following
 end
-
 association NavigatorLink between
-  Vehicle[1] role installation
-  Navigator[1] role navigator
+Vehicle[1] role installation
+Navigator[1] role navigator
 end
-
 association BrandLink between
-  Vehicle[1] role vehicle
-  Brand[1] role brand
+Vehicle[1] role vehicle
+Brand[1] role brand
 end
-
 association DestinationLink between
-  Navigator[0..1] role mobile
-  Destination[0..1] role destination
+Navigator[0..1] role mobile
+Destination[0..1] role destination
 end
-
 association CheckEngineLink between
-  Navigator[1] role commander
-  CheckEngine[1] role checkengine
+Navigator[1] role commander
+CheckEngine[1] role checkengine
 end
-
 association GlobalWeatherLink between
-  Navigator[1] role commander
-  GlobalWeather[1] role weathersystem
-end
+Navigator[1] role commander
+GlobalWeather[1] role weathersystem
+end 
