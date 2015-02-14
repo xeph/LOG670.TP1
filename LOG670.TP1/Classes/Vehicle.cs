@@ -1,10 +1,13 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Linq;
 
 namespace LOG670.TP1.Classes
 {
     public class Vehicle : Object
     {
+        private static IList<Vehicle> AllVehicles = new List<Vehicle>();
+
         public Vehicle(int position, int speed, Destination destination, Brand carBrand) : base(position)
         {
             Speed = speed;
@@ -13,6 +16,8 @@ namespace LOG670.TP1.Classes
             FuelLevel = 1.0f;
             TheNavigator = new Navigator(destination);
             CarBrand = carBrand;
+
+            AllVehicles.Add(this);
         }
 
         public int Speed { get; private set; }
@@ -117,8 +122,9 @@ namespace LOG670.TP1.Classes
             //post SelfNoLongerFollowedBy: not Vehicle.allInstances->exists(v | v.following = self)
             //post VehicleLeavingNoNavigator: not(self.navigator.isActive)
             //post VehicleLeavingNotFollowing: self.ConvoyLeader.isUndefined
-            //Contract.Ensures((ConvoyLeader == null || !IsVehicleInConvoy(ConvoyLeaderReference, this))); //TODO: Can't access other vehicles once you've left the convoy. How do I check this?
+            Contract.Ensures(AllVehicles.All(x => x.Following != this && x.FollowedBy != this));
             Contract.Ensures(!TheNavigator.IsActive);
+            Contract.Ensures(ConvoyLeader == null);
             Contract.EndContractBlock();
 
             //If this is the front car, set car following you to front car, and update all following vehicles.
@@ -190,10 +196,6 @@ namespace LOG670.TP1.Classes
                                (this.FollowedBy.Following == this &&
                                 (this.Following == null ||
                                  !this.TheNavigator.IsActive)));
-        }
-
-        public Vehicle(int position) : base(position)
-        {
         }
     }
 }
