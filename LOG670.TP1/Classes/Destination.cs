@@ -9,7 +9,6 @@ namespace LOG670.TP1.Classes
 
         public int Position { get; private set; }
         public bool HasGazStation { get; private set; }
-      
-    
+
     }
 }

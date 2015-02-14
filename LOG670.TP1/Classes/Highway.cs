@@ -21,11 +21,14 @@ namespace LOG670.TP1.Classes
         {
             //pre LaneNotCurrentLane: not (self.lane = lane)
             Contract.Requires(!desiredLane.Objects.Contains(vehicle));
-            Lane preLane = Lanes.Find(lane => lane.Objects.Contains(vehicle));
-
             //post LaneNowCurrentLane: self.lane = lane
             //post LaneNotOldLane: not (self.lane = self.lane@pre)
-            Contract.Ensures(desiredLane.Objects.Contains(vehicle) && !preLane.Objects.Contains(vehicle));
+            Contract.Ensures(desiredLane.Objects.Contains(vehicle));
+            Contract.Ensures(!Lanes.Exists(lane => lane.Objects.Contains(vehicle)));
+            Contract.EndContractBlock();
+
+            Lanes.Find(lane => lane.Objects.Contains(vehicle)).Objects.Remove(vehicle);
+            Lanes.Find(lane => lane == desiredLane).Objects.Add(vehicle);
         }
     
     }

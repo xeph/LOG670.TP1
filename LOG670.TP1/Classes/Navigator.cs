@@ -14,5 +14,9 @@ namespace LOG670.TP1.Classes
         public int CruiseSpeed { get; private set; }
         public CheckEngine Engine { get; private set; }
 
+        public void SetDestination(Destination destination)
+        {
+            TheDestination = destination;
+        }
     }
 }

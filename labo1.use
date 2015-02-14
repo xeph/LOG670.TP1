@@ -88,33 +88,34 @@ operations
   startConvoy(vehicle:Vehicle)
   pre VehicleStartingNotFollowing: self.following.isUndefined
   pre VehicleStartingNotFollowed: self.frontcar.isUndefined
-  pre VehicleStartingNoNavigator: not(self.navigator.isAlive)
+  pre VehicleStartingNoNavigator: not(self.navigator.isActive)
   pre VehicleEntryNotFollowing: vehicle.following.isUndefined
-  pre VehicleEntryNoNavigator: not(vehicle.navigator.isAlive)
+  pre VehicleEntryNoNavigator: not(vehicle.navigator.isActive)
   post VehicleStartedNotFollowing: self.frontcar.isUndefined
   post VehicleStartedFollowed: self.following = vehicle
-  post VehicleStartedNoNavigator: not(self.navigator.isAlive)
+  post VehicleStartedNoNavigator: not(self.navigator.isActive)
   post VehicleEnteredFollowing: vehicle.frontcar = self
-  post VehicleEnteredNavigatorOn: vehicle.navigator.isAlive
+  post VehicleEnteredNavigatorOn: vehicle.navigator.isActive
   -- Operation permettant de pouvoir joindre un convoi.
   joinConvoy(vehicle:Vehicle)
   pre FrontCarFollowingSomeone: not (vehicle.frontcar.isUndefined)
   pre FrontCarFollowedByNobody: vehicle.followedBy.isUndefined
-  pre FrontCarNaviOn: vehicle.frontcar.navigator.isAlive
+  pre FrontCarNaviOn: vehicle.frontcar.navigator.isActive
+  pre VehicleEntryNotNull: not(vehicle.isUnderfined)
   pre VehicleEntryFollowingNoOne: self.frontcar.isUndefined
-  pre VehicleEntryNoNavigator: not(self.navigator.isAlive)
+  pre VehicleEntryNoNavigator: not(self.navigator.isActive)
   post FrontCarStillFollowingSomeone: not (vehicle.frontcar.isUndefined)
   post VehicleNowFollowedBySelf: vehicle.followedBy = self
-  post FrontCarNaviStillOn: vehicle.frontcar.navigator.isAlive
+  post FrontCarNaviStillOn: vehicle.frontcar.navigator.isActive
   post VehicleEntryNowFollowingSomeone: self.frontcar = vehicle.frontcar
-  post VehicleEntryNowNavigatorOn: self.navigator.isAlive
+  post VehicleEntryNowNavigatorOn: self.navigator.isActive
   -- Operation permettant de quitter un convoi.
   leaveConvoy()
   pre VehicleIsFollowing: not(self.frontcar.isUndefined)
   pre VehicleHeadFollowed: self.frontcar.following = self
-  pre VehicleStartedNoNavigator: self.navigator.isAlive
+  pre VehicleStartedNoNavigator: self.navigator.isActive
   post VehicleHeadNotLongerFollowed: not Vehicle.allInstances->exists(v | v.following = self)
-  post VehicleLeavingNoNavigator: not(self.navigator.isAlive)
+  post VehicleLeavingNoNavigator: not(self.navigator.isActive)
   post VehicleLeavingNotFollowing: self.frontcar.isUndefined
   -- Request permettant de pouvoir valider que le véhicule respecte le limite de vitesse.
   respectSpeedLimit(speed : Integer) : Boolean = if self.Speed = speed then true else false endif
@@ -128,10 +129,10 @@ operations
   -- Operation permettant d'informer le navigateur à quelle destination que le convoi s'en va.
   setDestination(dest : Destination)
   pre DestinationNotCurrentDestination: not (self.navigator.destination = dest)
-  pre NavigatorOn: self.navigator.isAlive
+  pre NavigatorOn: self.navigator.isActive
   post DestinationNowCurrentDestination: self.navigator.destination = dest
   post DestinationNowOldDestination: not (self.navigator.destination = self.navigator.destination@pre)
-  post NavigatorStillOn: self.navigator.isAlive
+  post NavigatorStillOn: self.navigator.isActive
 end
 
 -- une facon unique d'identifier un vehicule a cause
@@ -147,7 +148,7 @@ end
 class Navigator
 attributes
   CruiseSpeed : Integer
-  isAlive : Boolean
+  isActive : Boolean
 end
  
 -- etat du temps exterieur qui permet de definir
@@ -197,7 +198,7 @@ context Lane inv NoObjectsCollide:
 
 -- En aucun temps, le leader d'un convoi ne peut être sur le navigateur
 context Vehicle inv ConvoyLeaderNotNaviOn:
-  self.frontcar.isUndefined implies self.navigator.isAlive = false
+  self.frontcar.isUndefined implies self.navigator.isActive = false
   
 -- En aucun temps, deux véhicules ne peuvent être suivi par le même véhicule.
 context Vehicle inv NotFollowedByTheSameVehicle:
