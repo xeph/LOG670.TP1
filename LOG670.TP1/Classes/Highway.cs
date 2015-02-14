@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Linq;
 
 namespace LOG670.TP1.Classes
 {
@@ -26,6 +27,15 @@ namespace LOG670.TP1.Classes
             //post LaneNowCurrentLane: self.lane = lane
             //post LaneNotOldLane: not (self.lane = self.lane@pre)
             Contract.Ensures(desiredLane.Objects.Contains(vehicle) && !preLane.Objects.Contains(vehicle));
+        }
+
+        [ContractInvariantMethod]
+        private void ObjectInvariant()
+        {
+            Contract.Invariant(Lanes.SelectMany(x => x.Objects)
+                                    .Where(x => x is Vehicle)
+                                    .Select(x => x as Vehicle)
+                                    .All(x => x.Speed <= MaxSpeed && x.Speed <= MinSpeed));
         }
     
     }

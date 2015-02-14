@@ -18,7 +18,13 @@ namespace LOG670.TP1.Classes
         public int Speed { get; private set; }
         public Vehicle FollowedBy { get; private set; }
         public Vehicle Following { get; set; }
-        public Vehicle FrontCar { get; set; }
+        public Vehicle FrontCar 
+        {
+            get
+            {
+                return (Following != null) ? Following.FrontCar : (FollowedBy != null) ? this : null;
+            }
+        }
         public float FuelLevel { get; private set; }
         public Navigator TheNavigator { get; private set; }
         public Brand CarBrand { get; private set; }
@@ -34,10 +40,13 @@ namespace LOG670.TP1.Classes
             //pre VehicleStartingNoNavigator: self.navigator.isAlive = false
             //pre VehicleEntryNotFollowing: vehicle.following.isUndefined 
             //pre VehicleEntryNoNavigator: vehicle.navigator.isAlive = false 
-            Contract.Requires(Following == null && FrontCar == null && !TheNavigator.IsActive && vehicle.Following == null && !vehicle.TheNavigator.IsActive);
+            Contract.Requires(Following == null && 
+                FrontCar == null && 
+                !TheNavigator.IsActive && 
+                vehicle.Following == null && 
+                !vehicle.TheNavigator.IsActive);
 
             this.Following = vehicle;
-            this.FrontCar = vehicle;
             vehicle.TheNavigator.IsActive = true;
             
             //post VehicleStartedNotFollowing: self.frontcar.isUndefined 
@@ -45,8 +54,11 @@ namespace LOG670.TP1.Classes
             //post VehicleStartedNoNavigator: self.navigator.isAlive = false
             //post VehicleEnteredFollowing: vehicle.frontcar = self
             //post VehicleEnteredNavigatorOn: vehicle.navigator.isAlive=true
-
-            Contract.Ensures(FrontCar == null && Following == vehicle && !TheNavigator.IsActive && vehicle.FrontCar == vehicle && vehicle.TheNavigator.IsActive);
+            Contract.Ensures(FrontCar == null && 
+                Following == vehicle && 
+                !TheNavigator.IsActive && 
+                vehicle.FrontCar == vehicle && 
+                vehicle.TheNavigator.IsActive);
         }
 
         /// <summary>
@@ -118,7 +130,7 @@ namespace LOG670.TP1.Classes
             //post SelfNoLongerFollowedBy: not Vehicle.allInstances->exists(v | v.following = self)
             //post VehicleLeavingNoNavigator: not(self.navigator.isAlive)
             //post VehicleLeavingNotFollowing: self.frontcar.isUndefined
-            Contract.Ensures((FrontCar == null || !IsVehicleInConvoy(frontCarReference, this)) && !TheNavigator.IsActive);
+            Contract.Assert((FrontCar == null || !IsVehicleInConvoy(frontCarReference, this)) && !TheNavigator.IsActive);
         }
 
         private void SetFollowingCarsToFrontCar(Vehicle newFrontCar, Vehicle followingVehicle)
