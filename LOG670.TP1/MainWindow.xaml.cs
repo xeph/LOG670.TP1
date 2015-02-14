@@ -38,10 +38,21 @@ namespace LOG670.TP1
             Car.Fill = Brushes.CornflowerBlue;
             Lane2.Children.Add(Car);
 
-            Vehicle c1 = new Vehicle(0, 1, null, null, 1, new Classes.Navigator(false, null, 1, null), null);
-            Vehicle c2 = new Vehicle(0, 1, null, null, 1, new Classes.Navigator(false, null, 1, null), null);
+            Destination destination1 = new Destination(30, true);
+            Destination destination2 = new Destination(40, false);
+            Destination destination3 = new Destination(100, true);
 
-            c1.Following = c2;
+            Vehicle c1 = new Vehicle(0, 20, destination1, null);
+            Vehicle c2 = new Vehicle(0, 20, destination2, null);
+            Vehicle c3 = new Vehicle(0, 20, destination1, null);
+            Vehicle c4 = new Vehicle(0, 20, destination2, null);
+
+            c1.StartConvoy(c2);
+            c3.JoinConvoy(c1);
+            c4.JoinConvoy(c2);
+            c1.LeaveConvoy(c1);
+            c1.SetDestination(destination3);
+
         }
 
         private Boolean ValidateInvariants()

@@ -97,9 +97,8 @@ namespace LOG670.TP1.Classes
         {
             //pre DestinationNotCurrentDestination: not (self.navigator.destination = dest)
             //pre NavigatorOn: self.navigator.isAlive = true
-            Destination previousDestination = TheNavigator.TheDestination;
             Contract.Requires(TheNavigator.TheDestination != destination && TheNavigator.IsActive);
-
+            Destination previousDestination = TheNavigator.TheDestination;
 
 
             //post DestinationNowCurrentDestination: self.navigator.destination = dest

@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics.Contracts;
 
 namespace LOG670.TP1.Classes
 {
@@ -15,6 +13,6 @@ namespace LOG670.TP1.Classes
         public int Identifier { get; private set; }
         public List<Object> Objects { get; private set; }
         public List<Destination> AllDestinations { get; private set; }
-    
+
     }
 }
