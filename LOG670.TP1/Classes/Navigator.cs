@@ -1,15 +1,15 @@
 namespace LOG670.TP1.Classes
 {
     public class Navigator {
-        public Navigator(bool isActive, Destination theDestination, int cruiseSpeed, CheckEngine engine)
+        public Navigator(Destination theDestination, int cruiseSpeed = 1)
         {
-            IsActive = isActive;
+            IsActive = false;
             TheDestination = theDestination;
             CruiseSpeed = cruiseSpeed;
-            Engine = engine;
+            Engine = new CheckEngine();
         }
 
-        public bool IsActive { get; private set; }
+        public bool IsActive { get; set; }
         public Destination TheDestination { get; private set; }
         public int CruiseSpeed { get; private set; }
         public CheckEngine Engine { get; private set; }

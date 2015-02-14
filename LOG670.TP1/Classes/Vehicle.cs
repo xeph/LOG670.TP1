@@ -5,14 +5,13 @@ namespace LOG670.TP1.Classes
 {
     public class Vehicle : Object
     {
-        public Vehicle(int position, int speed, Vehicle followedBy, Vehicle following, float fuelLevel,
-            Navigator theNavigator, Brand carBrand) : base(position)
+        public Vehicle(int position, int speed, Destination destination, Brand carBrand) : base(position)
         {
             Speed = speed;
-            FollowedBy = followedBy;
-            Following = following;
-            FuelLevel = fuelLevel;
-            TheNavigator = theNavigator;
+            FollowedBy = null;
+            Following = null;
+            FuelLevel = 1.0f;
+            TheNavigator = new Navigator(destination);
             CarBrand = carBrand;
         }
 

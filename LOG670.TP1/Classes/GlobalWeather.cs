@@ -1,12 +1,8 @@
 namespace LOG670.TP1.Classes
 {
-    public class GlobalWeather {
-        public GlobalWeather(float safeDistanceRatio)
-        {
-            SafeDistanceRatio = safeDistanceRatio;
-        }
+    public static class GlobalWeather {
 
-        public float SafeDistanceRatio { get; private set; }
+        public static float SafeDistanceRatio = 1.0f;
    
     }
 }

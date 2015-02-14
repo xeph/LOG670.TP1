@@ -1,12 +1,12 @@
 namespace LOG670.TP1.Classes
 {
     public class CheckEngine {
-        public CheckEngine(bool isOk)
+        public CheckEngine()
         {
-            IsOk = isOk;
+            IsOk = false;
         }
 
-        public bool IsOk { get; private set; }
+        public bool IsOk { get; set; }
          
     }
 }
