@@ -50,7 +50,7 @@ namespace LOG670.TP1
             c1.StartConvoy(c2);
             c3.JoinConvoy(c1);
             c4.JoinConvoy(c2);
-            c1.LeaveConvoy(c1);
+            c1.LeaveConvoy();
             c1.SetDestination(destination3);
 
         }
