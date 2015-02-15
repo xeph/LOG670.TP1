@@ -15,7 +15,6 @@ namespace LOG670.TP1
     /// </summary>
     public partial class MainWindow : Window
     {
-
         public MainWindow()
         {
             InitializeComponent();
@@ -23,7 +22,6 @@ namespace LOG670.TP1
             "---------------------------------------------------------------------------".Show();
             try
             {
-
                 Brand b = new Brand(1, "");
 
                 Destination d1 = new Destination(30, true);
@@ -37,23 +35,581 @@ namespace LOG670.TP1
 
                 Lane l1 = new Lane(new List<LOG670.TP1.Classes.Object>(), new List<Destination>(), 1);
                 Lane l2 = new Lane(new List<LOG670.TP1.Classes.Object>(), new List<Destination>(), 2);
-                Lane l3 = new Lane(new List<LOG670.TP1.Classes.Object>() { c1, c2, c3, c4 }, new List<Destination>() { d1, d2, d3 }, 3);
+                Lane l3 = new Lane(new List<LOG670.TP1.Classes.Object>() {c1, c2, c3, c4},
+                    new List<Destination>() {d1, d2, d3}, 3);
 
-                Highway h = new Highway(new List<Lane>() { l1, l2, l3 }, 30, 10);
+                Highway h = new Highway(new List<Lane>() {l1, l2, l3}, 30, 10);
 
-                
+
                 c1.StartConvoy(c2);
                 c3.JoinConvoy(c2);
                 c4.JoinConvoy(c3);
                 c2.LeaveConvoy();
                 c3.SetDestination(d3);
-            } 
-            catch(Exception e) 
+            }
+            catch (Exception e)
+            {
+                e.Message.Show();
+            }
+        }
+
+        public void Labo1_Test_ChangeLane()
+        {
+
+            InitializeComponent();
+
+            "---------------------------------------------------------------------------".Show();
+            try
+            {
+                Brand br1 = new Brand(3, "Toyota");
+                Brand br2 = new Brand(2, "Honda");
+
+                Vehicle ve1 = new Vehicle(6, 70, null, br1);
+                Vehicle ve2 = new Vehicle(7, 70, null, br2);
+
+                Lane la1 = new Lane(new List<Classes.Object>() , new List<Destination>(), 1);
+                Lane la2 = new Lane(new List<Classes.Object>() { ve1 }, new List<Destination>(), 2);
+
+                Highway h = new Highway(new List<Lane> { la1, la2 }, 100, 60);
+
+
+                ve1.ChangeLane(la1);
+
+            }
+            catch (Exception e)
+            {
+                e.Message.Show();
+            }
+        }
+
+        public void Labo1_Test_ChangeLane2()
+        {
+            InitializeComponent();
+
+            "---------------------------------------------------------------------------".Show();
+            try
+            {
+                Brand br1 = new Brand(3, "Toyota");
+                Brand br2 = new Brand(2, "Honda");
+
+                Vehicle ve1 = new Vehicle(6, 70, null, br1);
+                Vehicle ve2 = new Vehicle(7, 70, null, br2);
+
+                Lane la1 = new Lane(new List<Classes.Object>(), new List<Destination>(), 1);
+                Lane la2 = new Lane(new List<Classes.Object>() { ve1 }, new List<Destination>(), 2);
+
+                Highway h = new Highway(new List<Lane> { la1, la2 }, 100, 60);
+
+
+                ve1.ChangeLane(la2);
+
+            }
+            catch (Exception e)
+            {
+                e.Message.Show();
+            }
+        }
+
+        /// <summary>
+        /// impossible
+        /// </summary>
+        public void Labo1_Test_ChangeLane3()
+        {
+        }
+
+
+        public void Labo1_Test_JoinConvoy()
+        {
+            InitializeComponent();
+
+            "---------------------------------------------------------------------------".Show();
+            try
+            {
+                Brand br1 = new Brand(3, "Toyota");
+                Brand br2 = new Brand(2, "Honda");
+
+                Vehicle ve1 = new Vehicle(6, 70, null, br1);
+                Vehicle ve2 = new Vehicle(7, 70, null, br2);
+                Vehicle ve3 = new Vehicle(5, 70, null, br2);
+
+                Lane la1 = new Lane(new List<Classes.Object>(), new List<Destination>(), 1);
+                Lane la2 = new Lane(new List<Classes.Object>() { ve1, ve2 }, new List<Destination>(), 2);
+
+                Highway h = new Highway(new List<Lane> { la1, la2 }, 100, 60);
+
+
+                ve2.JoinConvoy(ve1);
+                ve3.JoinConvoy(ve2);
+
+            }
+            catch (Exception e)
+            {
+                e.Message.Show();
+            }
+        }
+
+        public void Labo1_Test_JoinConvoy2()
+        {
+            InitializeComponent();
+
+            "---------------------------------------------------------------------------".Show();
+            try
+            {
+                Brand br1 = new Brand(3, "Toyota");
+                Brand br2 = new Brand(2, "Honda");
+
+                Vehicle ve1 = new Vehicle(6, 70, null, br1);
+                Vehicle ve2 = new Vehicle(7, 70, null, br2);
+                Vehicle ve3 = new Vehicle(5, 70, null, br2);
+
+                Lane la1 = new Lane(new List<Classes.Object>(), new List<Destination>(), 1);
+                Lane la2 = new Lane(new List<Classes.Object>() { ve1, ve2 }, new List<Destination>(), 2);
+
+                Highway h = new Highway(new List<Lane> { la1, la2 }, 100, 60);
+
+
+                ve2.JoinConvoy(ve1);
+                ve3.JoinConvoy(ve1);
+
+            }
+            catch (Exception e)
+            {
+                e.Message.Show();
+            }
+        }
+
+        public void Labo1_Test_JoinConvoy3()
+        {
+        }
+
+        public void Labo1_Test_JoinConvoy4()
+        {
+        }
+
+        public void Labo1_Test_JoinConvoy5()
+        {
+        }
+
+        public void Labo1_Test_JoinConvoy6()
+        {
+        }
+
+        public void Labo1_Test_JoinConvoy7()
+        {
+        }
+
+        public void Labo1_Test_JoinConvoy8()
+        {
+        }
+
+        public void Labo1_Test_JoinConvoy9()
+        {
+            InitializeComponent();
+
+            "---------------------------------------------------------------------------".Show();
+            try
+            {
+                Brand br1 = new Brand(3, "Toyota");
+                Brand br2 = new Brand(2, "Honda");
+
+                Vehicle ve1 = new Vehicle(6, 70, null, br1);
+                Vehicle ve2 = new Vehicle(7, 70, null, br2);
+                Vehicle ve3 = new Vehicle(5, 70, null, br2);
+
+                Lane la1 = new Lane(new List<Classes.Object>(), new List<Destination>(), 1);
+                Lane la2 = new Lane(new List<Classes.Object>() { ve1, ve2 }, new List<Destination>(), 2);
+
+                Highway h = new Highway(new List<Lane> { la1, la2 }, 100, 60);
+
+
+                ve2.JoinConvoy(ve1);
+                ve2.TheNavigator.IsActive = false;
+                ve3.JoinConvoy(ve1);
+
+            }
+            catch (Exception e)
             {
                 e.Message.Show();
             }
 
         }
 
+        public void Labo1_Test_LeaveConvoy()
+        {
+            InitializeComponent();
+
+            "---------------------------------------------------------------------------".Show();
+            try
+            {
+                Brand br1 = new Brand(3, "Toyota");
+                Brand br2 = new Brand(2, "Honda");
+
+                Vehicle ve1 = new Vehicle(6, 70, null, br1);
+                Vehicle ve2 = new Vehicle(7, 70, null, br2);
+                Vehicle ve3 = new Vehicle(5, 70, null, br2);
+
+                Lane la1 = new Lane(new List<Classes.Object>(), new List<Destination>(), 1);
+                Lane la2 = new Lane(new List<Classes.Object>() { ve1, ve2 }, new List<Destination>(), 2);
+
+                Highway h = new Highway(new List<Lane> { la1, la2 }, 100, 60);
+
+                ve2.JoinConvoy(ve1);
+                ve3.JoinConvoy(ve1);
+
+                ve2.LeaveConvoy();
+
+
+            }
+            catch (Exception e)
+            {
+                e.Message.Show();
+            }
+
+        }
+
+        public void Labo1_Test_LeaveConvoy2()
+        {
+            InitializeComponent();
+
+            "---------------------------------------------------------------------------".Show();
+            try
+            {
+                Brand br1 = new Brand(3, "Toyota");
+                Brand br2 = new Brand(2, "Honda");
+
+                Vehicle ve1 = new Vehicle(6, 70, null, br1);
+                Vehicle ve2 = new Vehicle(7, 70, null, br2);
+                Vehicle ve3 = new Vehicle(5, 70, null, br2);
+
+                Lane la1 = new Lane(new List<Classes.Object>(), new List<Destination>(), 1);
+                Lane la2 = new Lane(new List<Classes.Object>() { ve1, ve2 }, new List<Destination>(), 2);
+
+                Highway h = new Highway(new List<Lane> { la1, la2 }, 100, 60);
+
+
+                ve2.LeaveConvoy();
+
+            }
+            catch (Exception e)
+            {
+                e.Message.Show();
+            }
+        }
+
+        public void Labo1_Test_LeaveConvoy3()
+        {
+            InitializeComponent();
+
+            "---------------------------------------------------------------------------".Show();
+            try
+            {
+                Brand br1 = new Brand(3, "Toyota");
+                Brand br2 = new Brand(2, "Honda");
+
+                Vehicle ve1 = new Vehicle(6, 70, null, br1);
+                Vehicle ve2 = new Vehicle(7, 70, null, br2);
+                Vehicle ve3 = new Vehicle(5, 70, null, br2);
+
+                Lane la1 = new Lane(new List<Classes.Object>(), new List<Destination>(), 1);
+                Lane la2 = new Lane(new List<Classes.Object>() { ve1, ve2 }, new List<Destination>(), 2);
+
+                Highway h = new Highway(new List<Lane> { la1, la2 }, 100, 60);
+
+                ve2.JoinConvoy(ve1);
+                ve2.TheNavigator.IsActive = false;
+                ve2.LeaveConvoy();
+
+
+            }
+            catch (Exception e)
+            {
+                e.Message.Show();
+            }
+        }
+
+        public void Labo1_Test_LeaveConvoy4()
+        {
+        }
+
+        public void Labo1_Test_LeaveConvoy5()
+        {
+        }
+
+        public void Labo1_Test_SetDestination()
+        {
+
+            InitializeComponent();
+
+            "---------------------------------------------------------------------------".Show();
+            try
+            {
+                Brand br1 = new Brand(3, "Toyota");
+
+                Destination de1 = new Destination(6, true);
+                Destination de2 = new Destination(12, true);
+
+                Vehicle ve1 = new Vehicle(6, 70, null, br1);
+              
+                Lane la1 = new Lane(new List<Classes.Object>(), new List<Destination>(), 1);
+                Lane la2 = new Lane(new List<Classes.Object>() { ve1 }, new List<Destination>(), 2);
+
+                Highway h = new Highway(new List<Lane> { la1, la2 }, 100, 60);
+
+                ve1.SetDestination(de1);
+                ve1.SetDestination(de2);
+
+            }
+            catch (Exception e)
+            {
+                e.Message.Show();
+            }
+        }
+
+        public void Labo1_Test_SetDestination2()
+        {
+            InitializeComponent();
+
+            "---------------------------------------------------------------------------".Show();
+            try
+            {
+                Brand br1 = new Brand(3, "Toyota");
+
+                Destination de1 = new Destination(6, true);
+                Destination de2 = new Destination(12, true);
+
+                Vehicle ve1 = new Vehicle(6, 70, null, br1);
+
+                Lane la1 = new Lane(new List<Classes.Object>(), new List<Destination>(), 1);
+                Lane la2 = new Lane(new List<Classes.Object>() { ve1 }, new List<Destination>(), 2);
+
+                Highway h = new Highway(new List<Lane> { la1, la2 }, 100, 60);
+
+                ve1.SetDestination(de2);
+                ve1.SetDestination(de2);
+
+            }
+            catch (Exception e)
+            {
+                e.Message.Show();
+            }
+        }
+
+        public void Labo1_Test_SetDestination3()
+        {
+            InitializeComponent();
+
+            "---------------------------------------------------------------------------".Show();
+            try
+            {
+                Brand br1 = new Brand(3, "Toyota");
+
+                Destination de1 = new Destination(6, true);
+                Destination de2 = new Destination(12, true);
+
+                Vehicle ve1 = new Vehicle(6, 70, null, br1);
+
+                Lane la1 = new Lane(new List<Classes.Object>(), new List<Destination>(), 1);
+                Lane la2 = new Lane(new List<Classes.Object>() { ve1 }, new List<Destination>(), 2);
+
+                Highway h = new Highway(new List<Lane> { la1, la2 }, 100, 60);
+
+                ve1.SetDestination(de1);
+                ve1.TheNavigator.IsActive = false;
+                ve1.SetDestination(de2);
+
+            }
+            catch (Exception e)
+            {
+                e.Message.Show();
+            }
+        }
+
+        public void Labo1_Test_SetDestination4()
+        {
+        }
+
+        public void Labo1_Test_StartConvoy()
+        {
+            InitializeComponent();
+
+            "---------------------------------------------------------------------------".Show();
+            try
+            {
+                Brand br1 = new Brand(3, "Toyota");
+                Brand br2 = new Brand(2, "Honda");
+
+                Vehicle ve1 = new Vehicle(6, 70, null, br1);
+                Vehicle ve2 = new Vehicle(7, 70, null, br2);
+                
+               
+                Lane la1 = new Lane(new List<Classes.Object>(), new List<Destination>(), 1);
+                Lane la2 = new Lane(new List<Classes.Object>() { ve1, ve2}, new List<Destination>(), 2);
+
+                Highway h = new Highway(new List<Lane> { la1, la2}, 100, 60);
+
+                ve2.StartConvoy(ve1);
+                
+            }
+            catch (Exception e)
+            {
+                e.Message.Show();
+            }
+
+        }
+
+        public void Labo1_Test_StartConvoy2()
+        {
+            InitializeComponent();
+
+            "---------------------------------------------------------------------------".Show();
+            try
+            {
+                Brand br1 = new Brand(3, "Toyota");
+                Brand br2 = new Brand(2, "Honda");
+
+                Vehicle ve1 = new Vehicle(6, 70, null, br1);
+                Vehicle ve2 = new Vehicle(7, 70, null, br2);
+
+
+                Lane la1 = new Lane(new List<Classes.Object>(), new List<Destination>(), 1);
+                Lane la2 = new Lane(new List<Classes.Object>() { ve1, ve2 }, new List<Destination>(), 2);
+
+                Highway h = new Highway(new List<Lane> { la1, la2 }, 100, 60);
+
+                ve2.StartConvoy(ve1);
+                ve2.StartConvoy(ve1);
+
+            }
+            catch (Exception e)
+            {
+                e.Message.Show();
+            }
+        }
+
+        public void Labo1_Test_StartConvoy3()
+        {
+            InitializeComponent();
+
+            "---------------------------------------------------------------------------".Show();
+            try
+            {
+                Brand br1 = new Brand(3, "Toyota");
+                Brand br2 = new Brand(2, "Honda");
+
+                Vehicle ve1 = new Vehicle(6, 70, null, br1);
+                Vehicle ve2 = new Vehicle(7, 70, null, br2);
+
+
+                Lane la1 = new Lane(new List<Classes.Object>(), new List<Destination>(), 1);
+                Lane la2 = new Lane(new List<Classes.Object>() { ve1, ve2 }, new List<Destination>(), 2);
+
+                Highway h = new Highway(new List<Lane> { la1, la2 }, 100, 60);
+
+                ve1.StartConvoy(ve2);
+                ve2.StartConvoy(ve1);
+
+            }
+            catch (Exception e)
+            {
+                e.Message.Show();
+            }
+        }
+
+        public void Labo1_Test_StartConvoy4()
+        {
+            InitializeComponent();
+
+            "---------------------------------------------------------------------------".Show();
+            try
+            {
+                Brand br1 = new Brand(3, "Toyota");
+                Brand br2 = new Brand(2, "Honda");
+
+                Vehicle ve1 = new Vehicle(6, 70, null, br1);
+                Vehicle ve2 = new Vehicle(7, 70, null, br2);
+
+
+                Lane la1 = new Lane(new List<Classes.Object>(), new List<Destination>(), 1);
+                Lane la2 = new Lane(new List<Classes.Object>() { ve1, ve2 }, new List<Destination>(), 2);
+
+                Highway h = new Highway(new List<Lane> { la1, la2 }, 100, 60);
+
+                ve1.TheNavigator.IsActive = true;
+                ve1.StartConvoy(ve2);
+
+
+            }
+            catch (Exception e)
+            {
+                e.Message.Show();
+            }
+        }
+
+        public void Labo1_Test_StartConvoy5()
+        {
+            InitializeComponent();
+
+            "---------------------------------------------------------------------------".Show();
+            try
+            {
+                Brand br1 = new Brand(3, "Toyota");
+                Brand br2 = new Brand(2, "Honda");
+
+                Vehicle ve1 = new Vehicle(6, 70, null, br1);
+                Vehicle ve2 = new Vehicle(7, 70, null, br2);
+
+
+                Lane la1 = new Lane(new List<Classes.Object>(), new List<Destination>(), 1);
+                Lane la2 = new Lane(new List<Classes.Object>() { ve1, ve2 }, new List<Destination>(), 2);
+
+                Highway h = new Highway(new List<Lane> { la1, la2 }, 100, 60);
+
+                ve2.TheNavigator.IsActive = true;
+                ve1.StartConvoy(ve2);
+               
+
+            }
+            catch (Exception e)
+            {
+                e.Message.Show();
+            }
+        }
+
+        public void Labo1_Test_StartConvoy6()
+        {
+        }
+
+        public void Labo1_Test_StartConvoy7()
+        {
+        }
+
+        public void Labo1_Test_StartConvoy8()
+        {
+        }
+
+        public void Labo1_Test_StartConvoy9()
+        {
+        }
+
+        public void Operation_Garage_RepairVehicle_CannotRepair()
+        {
+
+        }
+
+        public void Operation_Garage_RepairVehicle_NoNeed()
+        {
+        }
+
+        public void Operation_Garage_RepairVehicle_NotAtPosition()
+        {
+        }
+
+        public void Operation_Garage_RepairVehicle_PostConditionFalse()
+        {
+        }
+
+        public void Operation_Garage_RepairVehicle_PostConditionTrue()
+        {
+        }
     }
 }

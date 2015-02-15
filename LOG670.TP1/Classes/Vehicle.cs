@@ -193,5 +193,9 @@ namespace LOG670.TP1.Classes
                 AllVehicles.Select(x => x.FrontCar).Where(x => x != null).Count() == 
                 (new HashSet<Vehicle>(AllVehicles.Select(x => x.FrontCar).Where(x => x != null))).Count);
         }
+
+        public Vehicle(int position) : base(position)
+        {
+        }
     }
 }
