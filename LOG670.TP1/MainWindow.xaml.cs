@@ -56,8 +56,6 @@ namespace LOG670.TP1
         public void Labo1_Test_ChangeLane()
         {
 
-            InitializeComponent();
-
             "---------------------------------------------------------------------------".Show();
             try
             {
@@ -84,7 +82,6 @@ namespace LOG670.TP1
 
         public void Labo1_Test_ChangeLane2()
         {
-            InitializeComponent();
 
             "---------------------------------------------------------------------------".Show();
             try
@@ -120,7 +117,6 @@ namespace LOG670.TP1
 
         public void Labo1_Test_JoinConvoy()
         {
-            InitializeComponent();
 
             "---------------------------------------------------------------------------".Show();
             try
@@ -150,7 +146,6 @@ namespace LOG670.TP1
 
         public void Labo1_Test_JoinConvoy2()
         {
-            InitializeComponent();
 
             "---------------------------------------------------------------------------".Show();
             try
@@ -204,7 +199,6 @@ namespace LOG670.TP1
 
         public void Labo1_Test_JoinConvoy9()
         {
-            InitializeComponent();
 
             "---------------------------------------------------------------------------".Show();
             try
@@ -236,7 +230,6 @@ namespace LOG670.TP1
 
         public void Labo1_Test_LeaveConvoy()
         {
-            InitializeComponent();
 
             "---------------------------------------------------------------------------".Show();
             try
@@ -269,7 +262,6 @@ namespace LOG670.TP1
 
         public void Labo1_Test_LeaveConvoy2()
         {
-            InitializeComponent();
 
             "---------------------------------------------------------------------------".Show();
             try
@@ -298,7 +290,6 @@ namespace LOG670.TP1
 
         public void Labo1_Test_LeaveConvoy3()
         {
-            InitializeComponent();
 
             "---------------------------------------------------------------------------".Show();
             try
@@ -338,8 +329,6 @@ namespace LOG670.TP1
         public void Labo1_Test_SetDestination()
         {
 
-            InitializeComponent();
-
             "---------------------------------------------------------------------------".Show();
             try
             {
@@ -367,7 +356,6 @@ namespace LOG670.TP1
 
         public void Labo1_Test_SetDestination2()
         {
-            InitializeComponent();
 
             "---------------------------------------------------------------------------".Show();
             try
@@ -396,7 +384,6 @@ namespace LOG670.TP1
 
         public void Labo1_Test_SetDestination3()
         {
-            InitializeComponent();
 
             "---------------------------------------------------------------------------".Show();
             try
@@ -430,7 +417,6 @@ namespace LOG670.TP1
 
         public void Labo1_Test_StartConvoy()
         {
-            InitializeComponent();
 
             "---------------------------------------------------------------------------".Show();
             try
@@ -459,7 +445,6 @@ namespace LOG670.TP1
 
         public void Labo1_Test_StartConvoy2()
         {
-            InitializeComponent();
 
             "---------------------------------------------------------------------------".Show();
             try
@@ -488,7 +473,6 @@ namespace LOG670.TP1
 
         public void Labo1_Test_StartConvoy3()
         {
-            InitializeComponent();
 
             "---------------------------------------------------------------------------".Show();
             try
@@ -517,7 +501,6 @@ namespace LOG670.TP1
 
         public void Labo1_Test_StartConvoy4()
         {
-            InitializeComponent();
 
             "---------------------------------------------------------------------------".Show();
             try
@@ -547,7 +530,6 @@ namespace LOG670.TP1
 
         public void Labo1_Test_StartConvoy5()
         {
-            InitializeComponent();
 
             "---------------------------------------------------------------------------".Show();
             try
@@ -594,14 +576,63 @@ namespace LOG670.TP1
         public void Operation_Garage_RepairVehicle_CannotRepair()
         {
 
+            "---------------------------------------------------------------------------".Show();
+            try
+            {
+                Brand br1 = new Brand(3, "Toyota");
+                Brand br2 = new Brand(2, "Honda");
+
+                Vehicle ve1 = new Vehicle(6, 70, null, br1);
+                Garage g1 = new Garage(6, new List<Brand>() { br2 });
+
+                ve1.TheNavigator.Engine.IsOk = false;
+
+                g1.RepairVehicle(ve1);
+            }
+            catch (Exception e)
+            {
+                e.Message.Show();
+            }
         }
 
         public void Operation_Garage_RepairVehicle_NoNeed()
         {
+            "---------------------------------------------------------------------------".Show();
+            try
+            {
+                Brand br1 = new Brand(3, "Toyota");
+
+                Vehicle ve1 = new Vehicle(6, 70, null, br1);
+                Garage g1 = new Garage(6, new List<Brand>() { br1 });
+
+                ve1.TheNavigator.Engine.IsOk = true;
+
+                g1.RepairVehicle(ve1);
+            }
+            catch (Exception e)
+            {
+                e.Message.Show();
+            }
         }
 
         public void Operation_Garage_RepairVehicle_NotAtPosition()
         {
+            "---------------------------------------------------------------------------".Show();
+            try
+            {
+                Brand br1 = new Brand(3, "Toyota");
+
+                Vehicle ve1 = new Vehicle(6, 70, null, br1);
+                Garage g1 = new Garage(7, new List<Brand>(){br1});
+
+                ve1.TheNavigator.Engine.IsOk = false;
+
+                g1.RepairVehicle(ve1);
+            }
+            catch (Exception e)
+            {
+                e.Message.Show();
+            }
         }
 
         public void Operation_Garage_RepairVehicle_PostConditionFalse()
