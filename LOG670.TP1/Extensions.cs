@@ -8,6 +8,7 @@ namespace LOG670.TP1
 {
     static class Extensions
     {
+
         public static IEnumerable<UIElement> GetChildren(this Canvas c)
         {
             foreach(UIElement uie in c.Children)

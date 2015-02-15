@@ -5,16 +5,17 @@ using System.Linq;
 namespace LOG670.TP1.Classes
 {
     public class Highway {
-        public Highway(List<Lane> lanes, int length, int maxSpeed, int minSpeed)
+        public static readonly List<Highway> AllHighway = new List<Highway>();
+
+        public Highway(List<Lane> lanes, int maxSpeed, int minSpeed)
         {
             Lanes = lanes;
-            Length = length;
             MaxSpeed = maxSpeed;
             MinSpeed = minSpeed;
+            AllHighway.Add(this);
         }
 
         public List<Lane> Lanes { get; private set; }
-        public int Length { get; private set; }
         public int MaxSpeed { get; private set; }
         public int MinSpeed { get; private set; }
 
@@ -38,7 +39,7 @@ namespace LOG670.TP1.Classes
             Contract.Invariant(Lanes.SelectMany(x => x.Objects)
                                     .Where(x => x is Vehicle)
                                     .Select(x => x as Vehicle)
-                                    .All(x => x.Speed <= MaxSpeed && x.Speed <= MinSpeed));
+                                    .All(x => x.Speed <= MaxSpeed && x.Speed >= MinSpeed));
         }
     
     }

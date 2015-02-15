@@ -22,49 +22,42 @@ namespace LOG670.TP1.Classes
 
         public int Speed { get; private set; }
         public Vehicle Following { get; private set; }
-        public Vehicle FrontCar { get; set; }
-        public Vehicle ConvoyLeader 
-        {
-            get
-            {
-                return (FrontCar != null) ? FrontCar.ConvoyLeader : (Following != null) ? this : null;
-            }
-        }
+        public Vehicle FrontCar { get; private set; }
         public float FuelLevel { get; private set; }
         public Navigator TheNavigator { get; private set; }
         public Brand CarBrand { get; private set; }
 
         /// <summary>
-        /// Begins a convoy with vehicle received. Received vehicle is the leader.
+        /// Begins a convoy with vehicle received. Received vehicle is the follower.
         /// </summary>
         /// <param name="vehicle"></param>
         public void StartConvoy(Vehicle vehicle)
         {
-            //pre VehicleStartingNotFollowing: self.following.isUndefined 
-            //pre VehicleStartingNotFollowed: self.ConvoyLeader.isUndefined 
-            //pre VehicleStartingNoNavigator: self.navigator.isActive = false
-            //pre VehicleEntryNotFollowing: vehicle.following.isUndefined 
-            //pre VehicleEntryNoNavigator: vehicle.navigator.isActive = false 
+            //pre VehicleStartingNotFollowing: self.following.isUndefined
+            //pre VehicleStartingNotFollowed: self.frontcar.isUndefined
+            //pre VehicleStartingNoNavigator: self.navigator.isAlive = false
+            //pre VehicleEntryNotFollowing: vehicle.following.isUndefined
+            //pre VehicleEntryNoNavigator: vehicle.navigator.isAlive = false
+            Contract.Requires(Following == null);
             Contract.Requires(FrontCar == null);
-            Contract.Requires(ConvoyLeader == null);
             Contract.Requires(!TheNavigator.IsActive);
-            Contract.Requires(vehicle.FrontCar == null);
+            Contract.Requires(vehicle.Following == null);
             Contract.Requires(!vehicle.TheNavigator.IsActive);
-            //post VehicleStartedNotFollowing: self.ConvoyLeader.isUndefined 
+            //post VehicleStartedNotFollowing: self.frontcar.isUndefined
             //post VehicleStartedFollowed: self.following = vehicle
-            //post VehicleStartedNoNavigator: self.navigator.isActive = false
-            //post VehicleEnteredFollowing: vehicle.ConvoyLeader = self
-            //post VehicleEnteredNavigatorOn: vehicle.navigator.isActive=true
-            Contract.Ensures(ConvoyLeader == vehicle);
-            Contract.Ensures(FrontCar == vehicle);
+            //post VehicleStartedNoNavigator: self.navigator.isAlive = false
+            //post VehicleEnteredFollowing: vehicle.frontcar = self
+            //post VehicleEnteredNavigatorOn: vehicle.navigator.isAlive=true
+            Contract.Ensures(FrontCar == null);
+            Contract.Ensures(Following == vehicle);
             Contract.Ensures(!TheNavigator.IsActive);
-            Contract.Ensures(vehicle.ConvoyLeader == vehicle);
+            Contract.Ensures(vehicle.FrontCar == this);
             Contract.Ensures(vehicle.TheNavigator.IsActive);
             Contract.EndContractBlock();
 
-            FrontCar = vehicle;
             vehicle.TheNavigator.IsActive = true;
-            vehicle.Following = this;
+            Following = vehicle;
+            vehicle.FrontCar = this;
         }
 
         /// <summary>
@@ -73,33 +66,34 @@ namespace LOG670.TP1.Classes
         /// <param name="vehicle">le véhicule qui fait partie du convoi que tu veut te joindre à</param>
         public void JoinConvoy(Vehicle vehicle)
         {
-            //pre ConvoyLeaderFollowingSomeone: not (vehicle.ConvoyLeader.isUndefined)
-            //pre ConvoyLeaderFollowedByNobody: vehicle.followed.isUndefined //TODO: wtf?
-            //pre VehicleEntryNotNull: not(vehicle.isUnderfined)
-            //pre ConvoyLeaderNaviOn: vehicle.ConvoyLeader.navigator.isActive
-            //pre VehicleEntryFollowingNoOne: self.ConvoyLeader.isUndefined
-            //pre VehicleEntryNoNavigator: not(self.navigator.isActive)
-            Contract.Requires(vehicle.ConvoyLeader != null);
             Contract.Requires(vehicle != null);
-            Contract.Requires(vehicle.FrontCar == null);
+            
+            //pre FrontCarFollowingSomeone: not (vehicle.frontcar.isUndefined)
+            //pre FrontCarFollowedByNobody: vehicle.following.isUndefined
+            //pre FrontCarNaviOn: vehicle.navigator.isAlive=true
+            //pre VehicleEntryFollowingNoOne: self.frontcar.isUndefined
+            //pre VehicleEntryNoNavigator: self.navigator.isAlive = false
+            Contract.Requires(vehicle.FrontCar != null);
+            Contract.Requires(vehicle.Following == null);
             Contract.Requires(vehicle.TheNavigator.IsActive);
-            Contract.Requires(ConvoyLeader == null);
+            Contract.Requires(FrontCar == null);
             Contract.Requires(!TheNavigator.IsActive);
-            //post ConvoyLeaderStillFollowingSomeone: not (vehicle.ConvoyLeader.isUndefined)
-            //post VehicleNowFollowedBySelf: vehicle.followedBy = self
-            //post ConvoyLeaderNaviStillOn: vehicle.ConvoyLeader.navigator.isActive
-            //post VehicleEntryNowFollowingSomeone: not(self.following.isUndefined)
-            //post VehicleEntryNowNavigatorOn: self.navigator.isActive
-            Contract.Ensures(vehicle.ConvoyLeader != null);
+            //post FrontCarStillFollowingSomeone: not (vehicle.frontcar.isUndefined)
+            //post FrontCarNowFollowedBySelf: vehicle.following = self
+            //post FrontCarNaviStillOn: vehicle.navigator.isAlive=true
+            //post VehicleEntryNowFollowingSomeone: self.frontcar = vehicle
+            //post VehicleEntryNowNavigatorOn: self.navigator.isAlive = true
+            Contract.Ensures(vehicle.FrontCar != null);
             Contract.Ensures(vehicle.Following == this);
-            Contract.Ensures(vehicle.ConvoyLeader.TheNavigator.IsActive);
-            Contract.Ensures(FrontCar != null);
+            Contract.Ensures(vehicle.TheNavigator.IsActive);
+            Contract.Ensures(FrontCar == vehicle);
             Contract.Ensures(TheNavigator.IsActive);
             Contract.EndContractBlock();
 
+
+            TheNavigator.IsActive = true;
             vehicle.Following = this;
             FrontCar = vehicle;
-            TheNavigator.IsActive = true;
         }
 
         /// <summary>
@@ -113,36 +107,27 @@ namespace LOG670.TP1.Classes
         /// </summary>
         public void LeaveConvoy()
         {
-            //pre VehicleIsFollowing: not(self.ConvoyLeader.isUndefined)
-            //pre VehicleHeadFollowed: not(self.ConvoyLeader.followedBy.isUndefined)
-            //pre VehicleStartedNoNavigator: self.navigator.isActive
-            Contract.Requires(ConvoyLeader != null);
-            Contract.Requires(ConvoyLeader.Following != null);
+            //pre VehicleIsFollowing: self.frontcar.isUndefined = false
+            //pre VehicleHeadFollowed: self.frontcar.following = self
+            //pre VehicleStartedNoNavigator: self.navigator.isAlive = true
+            Contract.Requires(FrontCar != null);
+            Contract.Requires(FrontCar.Following != null);
             Contract.Requires(TheNavigator.IsActive);
-            //post SelfNoLongerFollowedBy: not Vehicle.allInstances->exists(v | v.following = self)
-            //post VehicleLeavingNoNavigator: not(self.navigator.isActive)
-            //post VehicleLeavingNotFollowing: self.ConvoyLeader.isUndefined
+            //post VehicleHeadNotLongerFollowed: not Vehicle.allInstances->exists(v | v.following = self)
+            //post VehicleLeavingNoNavigator: self.navigator.isAlive = false
+            //post VehicleLeavingNotFollowing: self.frontcar.isUndefined
             Contract.Ensures(AllVehicles.All(x => x.FrontCar != this && x.Following != this));
             Contract.Ensures(!TheNavigator.IsActive);
-            Contract.Ensures(ConvoyLeader == null);
+            Contract.Ensures(FrontCar == null);
             Contract.EndContractBlock();
 
-            //If this is the front car, set car following you to front car, and update all following vehicles.
-            if (ConvoyLeader == this)
-            {
+            if (FrontCar != null)
+                FrontCar.Following = Following;
+            else if (Following != null)
                 Following.TheNavigator.IsActive = false;
-                Following.FrontCar = null;
-                Following = null;
-            } 
-            else if (Following != null) //is between first and last car
-            {
-                FrontCar.Following = Following.FrontCar;
-                Following.FrontCar = FrontCar.Following;
-            }
-            else //is last car
-            {
-                FrontCar.Following = null;
-            }
+
+            if (Following != null)
+                Following.FrontCar = FrontCar;
 
             Following = null;
             FrontCar = null;
@@ -181,21 +166,32 @@ namespace LOG670.TP1.Classes
             Contract.EndContractBlock();
 
             TheNavigator.SetDestination(destination);
+        }
 
+        public void ChangeLane(Lane l)
+        {
+            //pre LaneNotCurrentLane: not (self.lane = lane)
+            Contract.Requires(!l.Objects.Contains(this));
+            //post LaneNowCurrentLane: self.lane = lane
+            //post LaneNotOldLane: not (self.lane = self.lane@pre)
+            Contract.Ensures(l.Objects.Contains(this));
+            Contract.Ensures(!Highway.AllHighway.SelectMany(x => x.Lanes).Where(x => x != l).Any(x => x.Objects.Contains(this)));
+            Contract.EndContractBlock();
+
+            Highway.AllHighway.SelectMany(x => x.Lanes).Single(x => x.Objects.Contains(this)).Objects.Remove(this);
+            l.Objects.Add(this);
         }
 
 
         [ContractInvariantMethod]
         private void ObjectInvariant()
         {
-            Contract.Invariant(this.FrontCar == null ||
-                               (this.FrontCar.Following == this &&
-                                this.TheNavigator.IsActive));
+            // En aucun temps, le leader d'un convoi ne peut être sur le navigateur
+            Contract.Invariant(this.FrontCar == null || this.TheNavigator.IsActive);
 
-            Contract.Invariant(this.Following == null ||
-                               (this.Following.FrontCar == this &&
-                                (this.FrontCar == null ||
-                                 !this.TheNavigator.IsActive)));
+            Contract.Invariant(
+                AllVehicles.Select(x => x.FrontCar).Where(x => x != null).Count() == 
+                (new HashSet<Vehicle>(AllVehicles.Select(x => x.FrontCar).Where(x => x != null))).Count);
         }
     }
 }

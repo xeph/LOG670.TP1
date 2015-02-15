@@ -1,44 +1,6 @@
 ﻿<Window x:Class="LOG670.TP1.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="350" Width="525" KeyDown="Window_KeyDown">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition></RowDefinition>
-            <RowDefinition></RowDefinition>
-            <RowDefinition></RowDefinition>
-            <RowDefinition></RowDefinition>
-            <RowDefinition></RowDefinition>
-            <RowDefinition></RowDefinition>
-            <RowDefinition></RowDefinition>
-            <RowDefinition></RowDefinition>
-            <RowDefinition></RowDefinition>
-            <RowDefinition></RowDefinition>
-            <RowDefinition></RowDefinition>
-        </Grid.RowDefinitions>
+        Title="MainWindow" Height="350" Width="525" >
 
-        <Canvas Background="LimeGreen" Grid.Column="0" Grid.RowSpan="11" Name="Lane0"></Canvas>
-        <Canvas Background="LimeGreen" Grid.Column="1" Grid.RowSpan="11" Name="Lane1"></Canvas>
-        <Canvas Background="LimeGreen" Grid.Column="2" Grid.RowSpan="11" Name="Lane2"></Canvas>
-        <Canvas Background="LimeGreen" Grid.Column="3" Grid.RowSpan="11" Name="Lane3"></Canvas>
-
-        <Button Grid.Column="4" Grid.Row="0" Click="Button_Click">Add Car</Button>
-        <Button Grid.Column="4" Grid.Row="1">Unnamed</Button>
-        <Button Grid.Column="4" Grid.Row="2">Unnamed</Button>
-        <Button Grid.Column="4" Grid.Row="3">Unnamed</Button>
-        <Button Grid.Column="4" Grid.Row="4">Unnamed</Button>
-        <Button Grid.Column="4" Grid.Row="5">Unnamed</Button>
-        <Button Grid.Column="4" Grid.Row="6">Unnamed</Button>
-        <Button Grid.Column="4" Grid.Row="7">Unnamed</Button>
-        <Button Grid.Column="4" Grid.Row="8">Unnamed</Button>
-        <Button Grid.Column="4" Grid.Row="9">Unnamed</Button>
-        <Button Grid.Column="4" Grid.Row="10">Unnamed</Button>
-    </Grid>
 </Window>
